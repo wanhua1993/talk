@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     back() {
-      this.$router.push("/message");
+      this.$router.back();
     },
     initScroll() {
       let width = this.menuList.length * 100;

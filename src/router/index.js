@@ -12,6 +12,7 @@ const Chatroom = asyncComponent('chatroom');
 const AddFriend = asyncComponent('friend/addFriend');
 const Usercenter = asyncComponent('friend/usercenter');
 const Circle = asyncComponent('circle');
+const Release = asyncComponent('circle/release');
 
 Vue.use(Router)
 
@@ -56,6 +57,11 @@ export default new Router({
       path: '/circle',
       name: 'Circle',
       component: Circle
+    },
+    {
+      path: '/release',
+      name: 'Release',
+      component: Release
     }
   ]
 })

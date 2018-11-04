@@ -23,7 +23,7 @@
                         <span :class="[item.location=='left' ? left_span : right_span]"></span> 
                     </p>
                     <!-- 图片 -->
-                    <p v-else-if="item.type=='img'"class="chat_img" :class="[item.location=='left' ? left : right]" >
+                    <p v-else-if="item.type=='img'" class="chat_img" :class="[item.location=='left' ? left : right]" >
                         <img :src="item.content" alt="图片" width="150px" height="150px">
                         <span :class="[item.location=='left' ? left_span : right_span]"></span> 
                     </p>

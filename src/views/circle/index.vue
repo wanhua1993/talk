@@ -7,7 +7,7 @@
                     <img src="../../assets/fanhui.png" alt="" width="30px" height="30px">
                 </span> -->
                 <!-- <input id="upload_file" type="file" style="" accept='image/*' name="file"  @change="fileChange($event)"/> -->
-                <span class="second">
+                <span class="second"  @click='to_release'>
                     <img src="../../assets/zhaoxiangji.png" alt="" width="32px" height="32px">
                 </span>
             </p>
@@ -15,8 +15,18 @@
         <div class="circle_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}">
 
         </div>
-        <ul class="circlr_list">
-            
+        <ul class="circle_list">
+            <li v-for='(item, index) in mesList' :key='index'>
+                <span class="circle_avatar">
+                  <img :src="item.avatar" alt="头像">
+                </span>
+                <p style="color: #f84be1">{{item.username}}</p>
+                <p>{{item.content}}</p>
+                <p v-if='item.imgUrl.length' class="imgUrl">
+                  <img v-for='(val, index) in item.imgUrl' :key="index" :src="val" alt="图片" >
+                </p>
+                <p style="margin: 0; color: #999">{{item.time}}</p>
+            </li>
         </ul>
         <Footer></Footer>
     </div>
@@ -26,15 +36,73 @@ import Footer from "@/views/common/footer";
 export default {
   data() {
     return {
-      back_url: require("@/assets/circle_back.jpg")
+      back_url: require("@/assets/circle_back.jpg"),
+      mesList: [
+        {
+          avatar: require("@/assets/meinv1.jpg"),
+          username: "小天",
+          content:
+            "今天天气这么好，不出去玩就白瞎了！今天天气这么好，不出去玩就白瞎了！今天天气这么好，不出去玩就白瞎了！",
+          time: "2018-11-02",
+          imgUrl: []
+        },
+        {
+          avatar: require("@/assets/meinv2.jpg"),
+          username: "小天",
+          content: "今天天气这么好，不出去玩就白瞎了！",
+          time: "2018-11-02",
+          imgUrl: [
+            require("@/assets/meinv1.jpg"),
+            require("@/assets/meinv2.jpg"),
+            require("@/assets/meinv3.jpg"),
+            require("@/assets/meinv4.jpg")
+          ]
+        },
+        {
+          avatar: require("@/assets/meinv3.jpg"),
+          username: "小施",
+          content:
+            "今天天气这么好，不出去玩就白瞎了！今天天气这么好，不出去玩就白瞎了！",
+          time: "2018-11-02",
+          imgUrl: []
+        },
+        {
+          avatar: require("@/assets/meinv4.jpg"),
+          username: "小胡",
+          content: "今天天气这么好，不出去玩就白瞎了！",
+          time: "2018-11-02",
+          imgUrl: []
+        },
+        {
+          avatar: require("@/assets/meinv1.jpg"),
+          username: "小天",
+          content:
+            "今天天气这么好，不出去玩就白瞎了！今天天气这么好，不出去玩就白瞎了！",
+          time: "2018-11-02",
+          imgUrl: [
+            require("@/assets/meinv1.jpg"),
+            require("@/assets/meinv2.jpg"),
+            require("@/assets/meinv3.jpg")
+          ]
+        },
+        {
+          avatar: require("@/assets/meinv3.jpg"),
+          username: "小花",
+          content: "今天天气这么好，不出去玩就白瞎了！",
+          time: "2018-11-02",
+          imgUrl: []
+        }
+      ]
     };
   },
   components: {
     Footer
   },
   methods: {
-
-}
+    to_release() {
+      this.$router.push('/release');
+    }
+  }
 };
 </script>
 <style scoped>
@@ -43,6 +111,7 @@ export default {
   min-height: 100%;
   border: 1px solid transparent;
   box-sizing: border-box;
+  padding-bottom: 60px;
 }
 .circle_back {
   margin-top: 60px;
@@ -76,10 +145,42 @@ export default {
   top: 6px;
   left: 14px;
 }
-.circlr_list {
-  width: 80%;
+.circle_list {
+  /* width: 90%; */
   margin: 0 auto;
+  padding: 0;
+  margin-top: 20px;
+}
+.circle_list li {
+  position: relative;
+  width: calc(100%-40px);
+  /* height: 200px; */
+  border-bottom: 1px solid rgb(221, 217, 220);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 0 20px 20px 50px;
+  /* box-shadow: 0 0.8px 0 0.3px #fcbcf3; */
+}
+.circle_list li p {
+  text-align: left;
+  margin-bottom: 20px;
+}
+.circle_avatar {
+  position: absolute;
+  top: -5px;
+  left: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.circle_avatar img {
+  width: 100%;
   height: 100%;
-  border: 1px solid red;
+}
+.imgUrl img {
+  width: 100px;
+  height: 100px;
+  margin: 5px 5px;
 }
 </style>

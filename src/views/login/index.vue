@@ -47,7 +47,7 @@ export default {
 <style scoped>
 .logo {
   width: 100%;
-  height: 35%;
+  /* height: 35%; */
 }
 .logo div {
   width: 70%;
@@ -69,7 +69,7 @@ export default {
 .login_input {
   width: 70%;
   margin: 0 auto;
-  margin-top: 3%;
+  margin-top: 40px;
 }
 .login_p {
   width: 70%;

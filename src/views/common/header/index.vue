@@ -2,8 +2,8 @@
     <div class="mes_header">
         <p>
             聆语
-            <span class="first">
-                <img src="../../../assets/saomiao.png" alt="" width="18px" height="18px">
+            <span class="first" @click='user_center()'>
+                <img :src="avatar" alt="头像">
             </span>
             <span class="second" @click='btn_show'>
                 <img src="../../../assets/jia.png" alt="" width="32px" height="32px">
@@ -15,12 +15,17 @@
 export default {
   data() {
     return {
-      show: false
+      show: false,
+      avatar: require("@/assets/meinv1.jpg")
     };
   },
   methods: {
     btn_show() {
       this.$emit("marked", true);
+    },
+    // 跳转到个人中心页面
+    user_center() {
+      this.$router.push('/usercenter?id=111');
     }
   }
 };
@@ -35,7 +40,6 @@ export default {
   box-sizing: border-box;
   z-index: 1;
 }
-
 
 .mes_header p {
   position: relative;
@@ -53,7 +57,13 @@ export default {
 }
 .mes_header p .first {
   position: absolute;
-  top: 4px;
+  top: 8px;
   left: 14px;
+}
+.mes_header p .first img {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 32px;
+  height: 32px;
 }
 </style>

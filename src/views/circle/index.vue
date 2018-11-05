@@ -6,7 +6,6 @@
                 <!-- <span class="first">
                     <img src="../../assets/fanhui.png" alt="" width="30px" height="30px">
                 </span> -->
-                <!-- <input id="upload_file" type="file" style="" accept='image/*' name="file"  @change="fileChange($event)"/> -->
                 <span class="second"  @click='to_release'>
                     <img src="../../assets/zhaoxiangji.png" alt="" width="32px" height="32px">
                 </span>
@@ -109,9 +108,9 @@ export default {
 .cirlce_box {
   width: 100%;
   min-height: 100%;
-  border: 1px solid transparent;
   box-sizing: border-box;
   padding-bottom: 60px;
+  overflow: hidden;
 }
 .circle_back {
   margin-top: 60px;
@@ -179,8 +178,7 @@ export default {
   height: 100%;
 }
 .imgUrl img {
-  width: 100px;
-  height: 100px;
-  margin: 5px 5px;
+  width: calc((100% - 18px)/3);
+  margin: 3px;
 }
 </style>

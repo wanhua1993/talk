@@ -159,7 +159,7 @@ export default {
 .mes_box {
   width: 100%;
   min-height: 100%;
-  border: 1px solid transparent;
+  overflow: hidden;
   box-sizing: border-box;
 }
 .con {

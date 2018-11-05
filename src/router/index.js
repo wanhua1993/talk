@@ -13,6 +13,7 @@ const AddFriend = asyncComponent('friend/addFriend');
 const Usercenter = asyncComponent('friend/usercenter');
 const Circle = asyncComponent('circle');
 const Release = asyncComponent('circle/release');
+const EditInfo = asyncComponent('friend/editInfo');
 
 Vue.use(Router)
 
@@ -62,6 +63,11 @@ export default new Router({
       path: '/release',
       name: 'Release',
       component: Release
+    },
+    {
+      path: '/editInfo',
+      name: 'EditInfo',
+      component: EditInfo
     }
   ]
 })

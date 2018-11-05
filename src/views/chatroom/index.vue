@@ -212,9 +212,9 @@ export default {
   position: relative;
   width: 100%;
   min-height: 100%;
-  border: 1px solid transparent;
   box-sizing: border-box;
   background: rgb(240, 240, 240);
+  overflow: hidden;
 }
 .mes_header {
   position: fixed;

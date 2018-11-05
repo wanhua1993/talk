@@ -9,16 +9,25 @@
             </p>  
         </div>
         <div class="release_con">
-            <textarea name="content" id="content" cols="30" rows="8" placeholder="这一刻的想法..."></textarea>
+            <textarea name="content" id="content" cols="30" rows="6" placeholder="这一刻的想法..."></textarea>
         </div>
         <ul class="release_photo">
             <li v-for="(item, index) in photo_list" :key="index">
                 <img :src="item" alt="">
             </li>
-            <li class="last_li">
-                <img src="../../assets/jia_1.png" alt="">
-            </li>
+            <div class="clear"></div>
         </ul>
+        <div class="upload_photo">
+          <p>
+            上传图片
+                <input id="upload_file" type="file" style="" accept='image/*' name="file"  @change="fileChange($event)"/>
+          </p>
+        </div>
+        <div class="release_btn">
+          <p @click="to_circle">
+            发表
+          </p>
+        </div>
     </div>
 </template>
 <script>
@@ -36,15 +45,25 @@ export default {
   methods: {
     back() {
       this.$router.back();
+    },
+    to_circle() {
+      this.$router.push("/circle");
+    },
+    fileChange(event) {
+
     }
   }
 };
 </script>
 <style scoped>
+
+.clear {
+  clear: both;
+}
 .release_box {
   width: 100%;
   height: 100%;
-  border: 1px solid transparent;
+  overflow: hidden;
   box-sizing: border-box;
 }
 .mes_header {
@@ -86,21 +105,57 @@ export default {
 }
 .release_photo {
   width: 90%;
-  margin: 0 auto;
-  margin-top: 10px;
+  margin: 10px auto;
   padding: 0;
 }
 .release_photo li {
+  position: relative;
   float: left;
-  width: 32.7%;
-  margin: 0.5px;
+  width: calc((100% - 12px) / 3);
+  margin: 2px;
 }
 .release_photo li img {
   width: 100%;
   height: 100%;
 }
-.release_photo .last_li img {
-  width: 20px;
-  height: 20px;
+.upload_photo {
+  width: 100%;
+  height: 35px;
+  margin: 20px 0;
+}
+.upload_photo p {
+  position: relative;
+
+  width: 30%;
+  margin: 0 auto;
+  height: 100%;
+  line-height: 35px;
+  border-radius: 6px;
+  background: #f84be1;
+  color: #fff;
+  font-size: 16px;
+}
+.release_btn {
+  width: 100%;
+  height: 35px;
+  margin: 20px 0;
+}
+.release_btn p {
+  width: 30%;
+  margin: 0 auto;
+  height: 100%;
+  line-height: 35px;
+  border-radius: 6px;
+  background: #f84be1;
+  color: #fff;
+  font-size: 16px;
+}
+#upload_file {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 35px;
+  width: 100%;
+  opacity: 0;
 }
 </style>

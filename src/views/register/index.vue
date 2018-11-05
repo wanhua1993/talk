@@ -9,20 +9,20 @@
         <div class="reg_content">
             <div class="reg_input">
                 <img src="../../assets/shouji.png" alt="" class="input_img" >
-                <input type="text" placeholder="手机号">
+                <input type="text" placeholder="手机号" @blur='on_blur' v-model="phone_number">
             </div>
             <div class="reg_input">
                 <img src="../../assets/ziyuan.png" alt="" class="input_img" >
-                <input type="text" placeholder="验证码">
-                <span class="get_code">获取验证码</span>
+                <input type="text" placeholder="验证码" v-model="code">
+                <span class="get_code" @click='getCode()'>{{title}}</span>
             </div>
             <div class="reg_input">
                 <img src="../../assets/yanjing.png" alt="" class="input_img" >
-                <input type="password" placeholder="登录密码">
+                <input type="password" placeholder="登录密码" v-model="first_pass">
             </div>
             <div class="reg_input">
                 <img src="../../assets/yanjing.png" alt="" class="input_img" >
-                <input type="password" placeholder="确认密码">
+                <input type="password" placeholder="确认密码" v-model="second_pass">
             </div>
         </div>
         <div class="reg_btn">
@@ -36,13 +36,57 @@
     </div>    
 </template>
 <script>
+import { send_code } from "@/api/login";
 export default {
   data() {
-    return {};
+    return {
+      phone_number: "",
+      code: "",
+      first_pass: "",
+      second_pass: "",
+      time: 60,
+      title: "获取验证码",
+      flag: true,
+      timer: ""
+    };
   },
   methods: {
     back() {
       this.$router.back();
+    },
+    on_blur() {
+      let flag = this.isEnable(this.phone_number);
+      if (!flag && this.phone_number != "") {
+        this.phone_number = ""; // 清空手机号
+        alert("请输入正确的手机号码！");
+      }
+    },
+    // 验证手机号是否正确
+    isEnable(phone) {
+      return /^(13|14|15|16|17|18)[\d]{9}$/.test(phone);
+    },
+    // get code
+    getCode() {
+      if (this.flag) {
+        this.flag = false;
+        let timer = setInterval(() => {
+          this.title = `剩余 ${this.time} 秒`;
+          this.time--;
+          if (this.time <= 0) {
+            clearInterval(timer);
+            this.title = "发送验证码";
+            this.time = 60;
+            this.flag = true;
+          }
+        }, 1000);
+
+        // 向手机发送验证码;
+        send_code({})
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {});
+      }
     }
   }
 };
@@ -53,8 +97,8 @@ export default {
   width: 100%;
   height: 100%;
   background: linear-gradient(#c00dec, #f84be1); /* 标准的语法 */
-  border: 1px solid transparent;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .reg_head {
   margin: 27px 0;
@@ -112,6 +156,10 @@ export default {
   color: #fff;
   text-align: center;
 }
+.register:active {
+  box-shadow: 0 0 3px #000;
+  background: rgb(243, 214, 86);
+}
 .input_img {
   position: absolute;
   top: 10px;
@@ -120,10 +168,9 @@ export default {
   height: 20px;
 }
 .reg_footer {
-  position: absolute;
-  bottom: 30px;
   width: 100%;
   margin: 0 auto;
+  margin-top: 30px;
   color: #fff;
   font-size: 14px;
 }
@@ -137,6 +184,7 @@ export default {
   border-radius: 14px;
   padding: 0 5px;
   height: 28px;
+  width: 70px;
   line-height: 28px;
 }
 </style>

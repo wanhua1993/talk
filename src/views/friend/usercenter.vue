@@ -2,7 +2,7 @@
     <div class="add_box">
         <div class="mes_header">
             <p>
-                她的资料
+                {{title}}
                 <span class="first" @click='back()'>
                     <img src="../../assets/fanhui.png" alt="" width="30px" height="30px">
                 </span>
@@ -37,7 +37,9 @@
             <p class="user_val">中国 北京 朝阳</p>
         </div>
         <div class="user_btn">
-            <p class="btn" v-if="user_id">加为好友</p>
+            <p class="btn" v-if="my_id" @click="editInfo()">编辑信息</p>
+            <p class="btn" v-if="my_id" @click='login_out()'>退出登录</p>
+            <p class="btn" v-else-if="user_id">加为好友</p>
             <p class="btn" v-else @click="toroom">发送消息</p>
         </div>
     </div>
@@ -77,10 +79,17 @@ export default {
           url: require("@/assets/meinv2.jpg")
         }
       ],
-      user_id: ""
+      user_id: "",
+      my_id: "",
+      title: "她的资料"
     };
   },
   mounted() {
+    let { id } = this.$route.query;
+    if (id) {
+      this.my_id = id;
+      this.title = "个人中心";
+    }
     this.initScroll();
   },
   methods: {
@@ -103,7 +112,14 @@ export default {
       }
     },
     toroom() {
-        this.$router.push('/chatroom');
+      this.$router.push("/chatroom");
+    },
+    // 编辑信息
+    editInfo() {
+      this.$router.push("/editInfo");
+    },
+    login_out() {
+      this.$router.push('/login');
     }
   }
 };
@@ -113,9 +129,9 @@ export default {
   position: relative;
   width: 100%;
   min-height: 100%;
-  border: 1px solid transparent;
   box-sizing: border-box;
   background: rgb(240, 240, 240);
+  overflow: hidden;
 }
 .mes_header {
   position: fixed;
@@ -207,12 +223,7 @@ export default {
   overflow: hidden;
 }
 .user_photo ul {
-  /* width: 100%; */
-  /* display: flex;
-  flex-direction: row;
-  justify-content: space-between; */
   height: 100%;
-  /* line-height: 100%; */
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -244,7 +255,6 @@ export default {
 }
 .user_btn {
   width: 100%;
-  height: 35px;
 }
 .user_btn p {
   width: 40%;
@@ -255,5 +265,6 @@ export default {
   border-radius: 5px;
   color: #fff;
   font-size: 14px;
+  margin-bottom: 20px;
 }
 </style>

@@ -10,3 +10,4 @@ export const UPDATE_LOGIN_STATUS = 'UPDATE_LOGIN_STATUS;'; // 更新登录状态
 export const RESET = 'RESET'; // 重置
 export const LOGOUT = 'LOGOUT'; // 登出
 export const ADD_USER = 'ADD_USER'; //添加用户
+export const SHOW_WARN = 'SHOW_WARN'; // 弹出框状态

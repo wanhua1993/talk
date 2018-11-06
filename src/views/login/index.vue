@@ -1,5 +1,6 @@
 <template>
     <div class="login_box">
+        <Warn></Warn>
         <div class="logo">
           <div>
             <img src="../../assets/logo.png" alt="" class="logo_img">
@@ -8,7 +9,7 @@
         <div class="login_input">
             <div class="w_input">
                 <img src="../../assets/denglu.png" alt="" class="input_img">
-                <input type="text" v-model='user.username'  placeholder="用户名、手机号">
+                <input type="text" v-model='user.phone'  placeholder="手机号" ref="phone">
             </div>
             <div  class="w_input">
                 <img src="../../assets/mima.png" alt="" class="input_img" >
@@ -23,23 +24,51 @@
     </div>
 </template>
 <script>
+import { signIn } from "@/api/login";
+import Warn from "@/components/warn";
 export default {
+  components: {
+    Warn
+  },
   data() {
     return {
       user: {
-        usename: "",
+        phone: "",
         password: ""
       }
     };
   },
+  computed: {
+    // 首先获取登录状态
+  },
+  mounted() {
+    this.$refs.phone.focus();
+  },
   methods: {
     sign_in() {
       // 登录
-      this.$router.push('/message');
+      signIn({
+        user: this.user
+      })
+        .then(res => {
+          if (res.data.length) {
+            // 登录成功以后 设置登录状态 存储用户信息 socket 发送到后台
+
+            this.$router.push("/message");
+          } else {
+            this.$store.dispatch("setShowWarn", "请输入正确的用户名密码!");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     sign_up() {
       // 注册
-      this.$router.push('/register');
+      this.$router.push("/register");
+    },
+    callback() {
+      
     }
   }
 };
@@ -47,7 +76,6 @@ export default {
 <style scoped>
 .logo {
   width: 100%;
-  /* height: 35%; */
 }
 .logo div {
   width: 70%;
@@ -62,7 +90,7 @@ export default {
 .login_box {
   width: 100%;
   height: 100%;
-  background: linear-gradient(#c00dec, #f84be1); 
+  background: linear-gradient(#c00dec, #f84be1);
   border: 1px solid transparent;
   box-sizing: border-box;
 }
@@ -91,7 +119,6 @@ export default {
   width: 100%;
   border: 0px;
   outline: none;
-  /* padding-left: 30px; */
   border-bottom: 0.6px solid #fff;
   background: transparent;
   font-size: 16px;
@@ -120,5 +147,4 @@ export default {
   width: 20px;
   height: 20px;
 }
-
 </style>

@@ -13,7 +13,7 @@
             </div>
             <div class="reg_input">
                 <img src="../../assets/ziyuan.png" alt="" class="input_img" >
-                <input type="text" placeholder="验证码" v-model="code">
+                <input type="text" placeholder="验证码" v-model="code" @blur='vali_code()'>
                 <span class="get_code" @click='getCode()'>{{title}}</span>
             </div>
             <div class="reg_input">
@@ -22,11 +22,11 @@
             </div>
             <div class="reg_input">
                 <img src="../../assets/yanjing.png" alt="" class="input_img" >
-                <input type="password" placeholder="确认密码" v-model="second_pass">
+                <input type="password" placeholder="确认密码" v-model="second_pass" @blur='vali_pass()'>
             </div>
         </div>
         <div class="reg_btn">
-            <p class="register">完成注册</p>
+            <p class="register" @click="to_register()">完成注册</p>
         </div>
 
         <p class="reg_footer">
@@ -36,7 +36,7 @@
     </div>    
 </template>
 <script>
-import { send_code } from "@/api/login";
+import { send_code, sign_up, vali_phone } from "@/api/login";
 export default {
   data() {
     return {
@@ -47,7 +47,8 @@ export default {
       time: 60,
       title: "获取验证码",
       flag: true,
-      timer: ""
+      timer: "",
+      query_Code: ""
     };
   },
   methods: {
@@ -55,17 +56,19 @@ export default {
       this.$router.back();
     },
     on_blur() {
+      // 验证手机号是否合格  同时验证手机号是否已经被注册过
       let flag = this.isEnable(this.phone_number);
       if (!flag && this.phone_number != "") {
         this.phone_number = ""; // 清空手机号
-        alert("请输入正确的手机号码！");
+        this.$store.dispatch('setShowWarn', '请输入正确的手机号码!');
       }
+      this.vali_tel(this.phone_number);
     },
     // 验证手机号是否正确
     isEnable(phone) {
       return /^(13|14|15|16|17|18)[\d]{9}$/.test(phone);
     },
-    // get code
+    // 获取 code 码
     getCode() {
       if (this.flag) {
         this.flag = false;
@@ -79,14 +82,82 @@ export default {
             this.flag = true;
           }
         }, 1000);
-
         // 向手机发送验证码;
-        send_code({})
+        send_code({
+          phone: this.phone_number
+        })
           .then(res => {
-            console.log(res);
+            this.query_Code = res.data.code;
           })
           .catch(err => {});
       }
+    },
+    // 验证 code 是否正确
+    vali_code() {
+      if (this.code == "") {
+        return;
+      }
+      if (this.code == this.query_Code) {
+      } else {
+        this.$store.dispatch('setShowWarn', '验证码输入有误!');
+        this.code = "";
+      }
+    },
+    // 验证 两次输入的密码是否一致
+    vali_pass() {
+      if (this.second_pass == "") {
+        return;
+      }
+      if (this.first_pass == "") {
+        this.$store.dispatch('setShowWarn', '请输入密码!');
+        return;
+      }
+      if (this.first_pass != this.second_pass) {
+        this.$store.dispatch('setShowWarn', '两次密码输入不一致，请重新输入!');
+        return;
+      }
+    },
+    // 点击完成注册
+    to_register() {
+      if (
+        this.phone_number != "" &&
+        this.code != "" &&
+        this.first_pass != "" &&
+        this.second_pass != ""
+      ) {
+        sign_up({
+          phone: this.phone_number,
+          password: this.first_pass
+        })
+          .then(res => {
+            if (res.status == 200) {
+              this.$store.dispatch('setShowWarn', '注册成功');
+              setInterval(() => {
+                this.$router.push("login");
+              }, 1000);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.$store.dispatch('setShowWarn', '请填写完整信息!');
+      }
+    },
+    // 验证手机号是否注册
+    vali_tel(phone) {
+      vali_phone({
+        phone
+      })
+        .then(res => {
+          if (res.data == 1) {
+            this.$store.dispatch('setShowWarn', '该手机号已被注册，请重新输入!');
+            this.phone_number = "";
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

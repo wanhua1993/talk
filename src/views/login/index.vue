@@ -9,7 +9,7 @@
         <div class="login_input">
             <div class="w_input">
                 <img src="../../assets/denglu.png" alt="" class="input_img">
-                <input type="text" v-model='user.phone'  placeholder="手机号" ref="phone">
+                <input type="text" v-model='user.phone'  placeholder="聆语号、手机号" ref="phone">
             </div>
             <div  class="w_input">
                 <img src="../../assets/mima.png" alt="" class="input_img" >
@@ -52,9 +52,17 @@ export default {
       })
         .then(res => {
           if (res.data.length) {
-            // 登录成功以后 设置登录状态 存储用户信息 socket 发送到后台
-
-            this.$router.push("/message");
+            // 登录成功以后 设置登录状态 存储用户信息 
+            // socket 发送到后台
+            // 现在不用写 多账号切换 后续再说。。。
+            let data = {
+              data: res.data[0],
+              loginStatus: true
+            }
+            this.$store.commit('SET_LOGIN', data);
+            // 利用 socket 发送后台 设置后台登陆 应该是将用户存储起来。。。
+            socket.emit('login', res.data[0]._id);
+            // this.$router.push("/message");
           } else {
             this.$store.dispatch("setShowWarn", "请输入正确的用户名密码!");
           }

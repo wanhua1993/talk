@@ -119,6 +119,7 @@ export default {
     },
     // 点击完成注册
     to_register() {
+      // 用户注册以后 给每一个人分配 聆语 号
       if (
         this.phone_number != "" &&
         this.code != "" &&

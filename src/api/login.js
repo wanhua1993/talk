@@ -45,3 +45,10 @@ export const signIn = ({user}) => {
     method: 'post'
   });
 }
+// 修改密码
+export const update_pass = ({phone, password}) => {
+    return axios.request({
+      url: `/login/update_pass?phone=${phone}&password=${password}`,
+      method: 'get'
+    });
+}

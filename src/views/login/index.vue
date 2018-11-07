@@ -16,7 +16,7 @@
                 <input type="password" v-model='user.password' placeholder="登录密码">
             </div>
         </div>
-        <p class="login_p">忘记密码?</p>
+        <p class="login_p" @click="to_find()">忘记密码?</p>
         <div class="login_enter">
             <p class="sign_in sign" @click='sign_in'>登录</p>
             <p class="sign_up sign" @click='sign_up'>注册</p>
@@ -24,6 +24,7 @@
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { signIn } from "@/api/login";
 import Warn from "@/components/warn";
 export default {
@@ -40,11 +41,19 @@ export default {
   },
   computed: {
     // 首先获取登录状态
+    ...mapGetters(["isLogin"])
+  },
+  created() {
+    this.isLogin && this.$router.push("/message");
   },
   mounted() {
     this.$refs.phone.focus();
   },
   methods: {
+    // 点击忘记密码 以后
+    to_find() {
+      this.$router.push("/findPass");
+    },
     sign_in() {
       // 登录
       signIn({
@@ -52,17 +61,19 @@ export default {
       })
         .then(res => {
           if (res.data.length) {
-            // 登录成功以后 设置登录状态 存储用户信息 
+            // 登录成功以后 设置登录状态 存储用户信息
             // socket 发送到后台
             // 现在不用写 多账号切换 后续再说。。。
-            let data = {
+            let value = {
               data: res.data[0],
-              loginStatus: true
-            }
-            this.$store.commit('SET_LOGIN', data);
+              loginStatus: {
+                isLogin: true
+              }
+            };
+            this.$store.commit("SET_LOGIN", value);
             // 利用 socket 发送后台 设置后台登陆 应该是将用户存储起来。。。
-            socket.emit('login', res.data[0]._id);
-            // this.$router.push("/message");
+            socket.emit("login", res.data[0]._id);
+            this.$router.push("/message");
           } else {
             this.$store.dispatch("setShowWarn", "请输入正确的用户名密码!");
           }
@@ -75,9 +86,7 @@ export default {
       // 注册
       this.$router.push("/register");
     },
-    callback() {
-      
-    }
+    callback() {}
   }
 };
 </script>

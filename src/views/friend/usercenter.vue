@@ -1,5 +1,6 @@
 <template>
     <div class="add_box">
+      <Warn></Warn>
         <div class="mes_header">
             <p>
                 {{title}}
@@ -10,14 +11,14 @@
         </div>
         <div class="user_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}">
             <div class="user_avatar">
-                <img :src="avatar" alt="">
+                <img :src="user.avatar" alt="">
             </div>
             <div class="user_info">
                 <p>
-                    {{username}}
+                    {{user.username}}
                 </p>
                 <p>
-                    聆语号：{{id}}
+                    聆语号：{{user.iden_num}}
                 </p>
             </div>
         </div>
@@ -30,23 +31,29 @@
         </div>
         <div class="infos">
             <p class="user_title">座右铭</p>
-            <p class="user_val">心有多大，舞台就有多大</p>
+            <p class="user_val">{{user.signature}}</p>
             <p class="user_title">她的等级</p>
             <p class="user_val">111111111</p>
             <p class="user_title">所在地</p>
-            <p class="user_val">中国 北京 朝阳</p>
+            <p class="user_val">{{user.address}}</p>
         </div>
         <div class="user_btn">
             <p class="btn" v-if="my_id" @click="editInfo()">编辑信息</p>
             <p class="btn" v-if="my_id" @click='login_out()'>退出登录</p>
-            <p class="btn" v-else-if="user_id">加为好友</p>
+            <p class="btn" v-else-if="user_id" @click='add_user()'>加为好友</p>
             <p class="btn" v-else @click="toroom">发送消息</p>
         </div>
     </div>
 </template>
 <script>
+import Warn from "@/components/warn";
 import BScroll from "better-scroll";
+import { find_one_user } from "@/api/friend";
+import baseUrl from "@/config/";
 export default {
+  components: {
+    Warn
+  },
   data() {
     return {
       back_url: require("@/assets/user_back.png"),
@@ -81,14 +88,23 @@ export default {
       ],
       user_id: "",
       my_id: "",
-      title: "她的资料"
+      title: "她的资料",
+      user: {}
     };
   },
   mounted() {
-    let { id } = this.$route.query;
+    let { id, _id } = this.$route.query;
     if (id) {
+      // id  存在 说明 是自己的个人中心
       this.my_id = id;
       this.title = "个人中心";
+      this.find_friend(this.my_id);
+    }
+    if (_id) {
+      // _id 存在 说明 是别人的个人中心
+      // 通过 _id 来获取这个人 的 个人信息
+      this.user_id = _id;
+      this.find_friend(this.user_id);
     }
     this.initScroll();
   },
@@ -119,7 +135,24 @@ export default {
       this.$router.push("/editInfo");
     },
     login_out() {
-      this.$router.push('/login');
+      this.$store.commit("LOGOUT");
+      this.$router.push("/login");
+    },
+    find_friend(id) {
+      find_one_user({
+        id
+      })
+        .then(res => {
+          this.user = res.data[0];
+          this.user.avatar = baseUrl.baseUrl.dev + this.user.avatar;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    add_user() {
+       
+      this.$store.dispatch("setShowWarn", "好友请求 发送成功!");
     }
   }
 };
@@ -191,7 +224,7 @@ export default {
   height: 16px;
 }
 .user_back {
-  margin-top: 70px;
+  margin-top: 60px;
   width: calc(100% - 2px);
   height: 210px;
   border: 1px solid rgb(240, 240, 240);

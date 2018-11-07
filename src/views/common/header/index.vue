@@ -12,6 +12,7 @@
     </div>    
 </template>
 <script>
+import {mapGetters} from 'vuex';
 export default {
   data() {
     return {
@@ -19,13 +20,16 @@ export default {
       avatar: require("@/assets/meinv1.jpg")
     };
   },
+  computed: {
+    ...mapGetters(['userInfo'])
+  },
   methods: {
     btn_show() {
       this.$emit("marked", true);
     },
     // 跳转到个人中心页面
     user_center() {
-      this.$router.push('/usercenter?id=111');
+      this.$router.push('/usercenter?id=' + this.userInfo._id);
     }
   }
 };

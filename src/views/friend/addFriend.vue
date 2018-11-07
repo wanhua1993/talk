@@ -10,8 +10,11 @@
         </div>
         <div class="w_search">
             <p>
-                <input type="text" placeholder="聆语号、手机号">
+                <input type="text" placeholder="聆语号、手机号" v-model="number" @focus="focus()">
                 <img src="../../assets/sousuo.png" alt="">
+            </p>
+            <p class="show" v-show="show">
+              该用户不存在，请重新输入！
             </p>
         </div>
         <div class="findAll" @click="toUser">
@@ -22,16 +25,40 @@
     </div>
 </template>
 <script>
+import { search_friend } from "@/api/friend";
 export default {
   data() {
-    return {};
+    return {
+      number: "",
+      show: false
+    };
   },
   methods: {
+    focus() {
+      this.show = false;
+    },
     back() {
       this.$router.push("/message");
     },
     toUser() {
-      this.$router.push("/usercenter");
+      // 点击直接搜寻 好友是否存在
+      if (this.number == "") {
+        return false;
+      }
+      search_friend({
+        number: this.number
+      })
+        .then(res => {
+          if (res.data.length) {
+            let _id = res.data[0]._id;
+            this.$router.push("/usercenter?_id=" + _id);
+          } else {
+            this.show = true;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -145,5 +172,8 @@ export default {
 
 .live span:nth-child(2) {
   animation-delay: 1.5s;
+}
+.w_search .show {
+  margin-top: 60px;
 }
 </style>

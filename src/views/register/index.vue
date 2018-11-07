@@ -1,5 +1,6 @@
 <template>
     <div class="reg_box">
+        <Warn/>
         <p class="reg_head">
             注册
             <span class="reg_back" @click="back">
@@ -37,7 +38,11 @@
 </template>
 <script>
 import { send_code, sign_up, vali_phone } from "@/api/login";
+import Warn from "@/components/warn";
 export default {
+  components: {
+    Warn
+  },
   data() {
     return {
       phone_number: "",
@@ -55,21 +60,29 @@ export default {
     back() {
       this.$router.back();
     },
-    on_blur() {
+    async on_blur() {
       // 验证手机号是否合格  同时验证手机号是否已经被注册过
       let flag = this.isEnable(this.phone_number);
       if (!flag && this.phone_number != "") {
         this.phone_number = ""; // 清空手机号
-        this.$store.dispatch('setShowWarn', '请输入正确的手机号码!');
+        this.$store.dispatch("setShowWarn", "请输入正确的手机号码!");
       }
-      this.vali_tel(this.phone_number);
+      await this.vali_tel(this.phone_number);
     },
     // 验证手机号是否正确
     isEnable(phone) {
       return /^(13|14|15|16|17|18)[\d]{9}$/.test(phone);
     },
     // 获取 code 码
-    getCode() {
+    async getCode() {
+      let res = await this.vali_tel(this.phone_number);
+      if (!res) {
+        return;
+      }
+      if (this.phone_number == "") {
+        this.$store.dispatch("setShowWarn", "请输入正确的手机号!");
+        return;
+      }
       if (this.flag) {
         this.flag = false;
         let timer = setInterval(() => {
@@ -99,7 +112,7 @@ export default {
       }
       if (this.code == this.query_Code) {
       } else {
-        this.$store.dispatch('setShowWarn', '验证码输入有误!');
+        this.$store.dispatch("setShowWarn", "验证码输入有误!");
         this.code = "";
       }
     },
@@ -109,11 +122,11 @@ export default {
         return;
       }
       if (this.first_pass == "") {
-        this.$store.dispatch('setShowWarn', '请输入密码!');
+        this.$store.dispatch("setShowWarn", "请输入密码!");
         return;
       }
       if (this.first_pass != this.second_pass) {
-        this.$store.dispatch('setShowWarn', '两次密码输入不一致，请重新输入!');
+        this.$store.dispatch("setShowWarn", "两次密码输入不一致，请重新输入!");
         return;
       }
     },
@@ -132,7 +145,7 @@ export default {
         })
           .then(res => {
             if (res.status == 200) {
-              this.$store.dispatch('setShowWarn', '注册成功');
+              this.$store.dispatch("setShowWarn", "注册成功");
               setInterval(() => {
                 this.$router.push("login");
               }, 1000);
@@ -142,23 +155,32 @@ export default {
             console.log(err);
           });
       } else {
-        this.$store.dispatch('setShowWarn', '请填写完整信息!');
+        this.$store.dispatch("setShowWarn", "请填写完整信息!");
       }
     },
     // 验证手机号是否注册
-    vali_tel(phone) {
-      vali_phone({
-        phone
-      })
-        .then(res => {
-          if (res.data == 1) {
-            this.$store.dispatch('setShowWarn', '该手机号已被注册，请重新输入!');
-            this.phone_number = "";
-          }
+    async vali_tel(phone) {
+      let res = new Promise(resolve => {
+        vali_phone({
+          phone
         })
-        .catch(err => {
-          console.log(err);
-        });
+          .then(res => {
+            if (res.data == 1) {
+              this.$store.dispatch(
+                "setShowWarn",
+                "该手机号已被注册，请重新输入!"
+              );
+              this.phone_number = "";
+              resolve(false);
+            } else {
+              resolve(true);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
+      return res;
     }
   }
 };

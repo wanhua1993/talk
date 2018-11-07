@@ -21,7 +21,7 @@ export default {
 <style scoped>
 p.loading {
   position: absolute;
-  top: 50px;
+  bottom: 50px;
   left: 0;
   right: 0;
   margin: 0 10px;
@@ -31,9 +31,10 @@ p.loading {
   line-height: 28px;
   color: rgb(12, 12, 12);
   letter-spacing: 1px;
-  background: rgb(255, 255, 255);
+  background: rgb(108, 235, 57);
   opacity: 0.6;
   font-size: 14px;
   border-radius: 2px;
+  z-index: 99999;
 }
 </style>

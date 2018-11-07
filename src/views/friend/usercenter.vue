@@ -48,8 +48,9 @@
 <script>
 import Warn from "@/components/warn";
 import BScroll from "better-scroll";
-import { find_one_user } from "@/api/friend";
+import { find_one_user, addUser } from "@/api/friend";
 import baseUrl from "@/config/";
+import { mapGetters } from "vuex";
 export default {
   components: {
     Warn
@@ -91,6 +92,9 @@ export default {
       title: "她的资料",
       user: {}
     };
+  },
+  computed: {
+    ...mapGetters(["userInfo"])
   },
   mounted() {
     let { id, _id } = this.$route.query;
@@ -138,6 +142,7 @@ export default {
       this.$store.commit("LOGOUT");
       this.$router.push("/login");
     },
+    // 个人中心 个人信息
     find_friend(id) {
       find_one_user({
         id
@@ -150,9 +155,25 @@ export default {
           console.log(err);
         });
     },
-    add_user() {
-       
-      this.$store.dispatch("setShowWarn", "好友请求 发送成功!");
+    // 点击 加为好友  并且要实时告诉到对方
+    async add_user() {
+      // 1 先发送 好友申请请求
+      await this.to_user();
+      // 2 实时告诉对方
+      socket.emit('addFriend',  this.user._id);
+    },
+    async to_user() {
+      addUser({
+        to_id: this.user_id,
+        from_id: this.userInfo._id
+      })
+        .then(res => {
+          this.$store.dispatch("setShowWarn", "好友请求 发送成功!");
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

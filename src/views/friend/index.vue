@@ -9,13 +9,22 @@
           </p>  
         </div>
         <div class="list_box">
+          <p class="new_friends" @click="to_apply_list()">
+            <span class="friends_icon">
+              <img src="../../assets/friends.png" alt="">
+            </span>
+            新的朋友
+            <span class="applyNums" v-if="applyNums != 0">{{applyNums}}</span>  
+          </p>
           <ul class="first_ul">
             <li class="first_li" v-for="(item, index) in userList" :key="index">
               <p>{{item.type}}</p>
               <ul>
                 <li v-for="(val, ind) in item.list" :key="ind" @click="to_user()">
                   <img :src="val.avatar" alt="" class="user_avatar">
-                  <p class="user_name">{{val.username}}</p>
+                  <p class="user_name">
+                    {{val.username}}
+                  </p>
                 </li>
               </ul>
             </li>
@@ -26,6 +35,7 @@
 </template>
 <script>
 import Footer from "@/views/common/footer";
+import { mapGetters } from "vuex";
 export default {
   components: {
     Footer
@@ -87,9 +97,18 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["applyNums"])
+  },
   methods: {
     to_user() {
-      this.$router.push('/usercenter');
+      this.$router.push("/usercenter");
+    },
+    // 点击进入好友申请列表
+    to_apply_list() {
+      // 点击进去以后 所有的申请 状态清零
+      this.$store.commit('REMOVE_APPLY');
+      this.$router.push('/applyList');
     }
   }
 };
@@ -133,8 +152,9 @@ export default {
 }
 .first_ul {
   width: 90%;
-  margin: 80px auto;
+  margin: 0 auto;
   height: 100%;
+  margin-bottom: 70px;
 }
 .first_ul .first_li {
   width: 100%;
@@ -172,5 +192,40 @@ export default {
   height: 50px;
   line-height: 50px;
   display: inline-block;
+}
+.new_friends {
+  position: relative;
+  height: 40px;
+  line-height: 40px;
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  text-align: left;
+  margin-top: 70px;
+  padding: 0 50px;
+}
+.applyNums {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  line-height: 20px;
+  border-radius: 50%;
+  background: fuchsia;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+.friends_icon {
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+}
+.friends_icon img {
+  width: 100%;
+  height: 100%;
 }
 </style>

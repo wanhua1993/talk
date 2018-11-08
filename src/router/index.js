@@ -16,6 +16,7 @@ const Release = asyncComponent('circle/release');
 const EditInfo = asyncComponent('friend/editInfo');
 const FindPass = asyncComponent('login/findPass');
 const UpdatePass = asyncComponent('login/updatePass');
+const ApplyList = asyncComponent('friend/applyList');
 
 Vue.use(Router)
 
@@ -80,6 +81,11 @@ export default new Router({
       path: '/updatePass',
       name: 'UpdatePass',
       component: UpdatePass
+    },
+    {
+      path: '/applyList',
+      name: 'ApplyList',
+      component: ApplyList
     }
   ]
 })

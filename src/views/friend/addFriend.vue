@@ -25,7 +25,7 @@
     </div>
 </template>
 <script>
-import { search_friend } from "@/api/friend";
+import { search_friend, if_friend } from "@/api/friend";
 export default {
   data() {
     return {
@@ -38,20 +38,25 @@ export default {
       this.show = false;
     },
     back() {
-      this.$router.push("/message");
+      this.$router.back();
     },
     toUser() {
-      // 点击直接搜寻 好友是否存在
+      // 点击直接搜寻 先看好友是否存在  然后查看好友是否是自己的好友
       if (this.number == "") {
         return false;
       }
       search_friend({
         number: this.number
       })
-        .then(res => {
+        .then(async res => {
           if (res.data.length) {
             let _id = res.data[0]._id;
-            this.$router.push("/usercenter?_id=" + _id);
+            let flag = await this.if_myfriend(_id);
+            if (flag) {
+              this.$router.push("/usercenter?_id=" + _id);
+            } else {
+              this.$router.push("/usercenter?has_id=" + _id);
+            }
           } else {
             this.show = true;
           }
@@ -59,6 +64,25 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    // 看看该好友是否存在 在自己的好友列表中
+    async if_myfriend(_id) {
+      let res = await new Promise(resolve => {
+        if_friend({
+          _id
+        })
+          .then(res => {
+            if (res.data.length) {
+              resolve(false);
+            } else {
+              resolve(true);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
+      return res;
     }
   }
 };

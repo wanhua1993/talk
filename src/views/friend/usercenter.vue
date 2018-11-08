@@ -97,7 +97,7 @@ export default {
     ...mapGetters(["userInfo"])
   },
   mounted() {
-    let { id, _id } = this.$route.query;
+    let { id, _id, has_id } = this.$route.query;
     if (id) {
       // id  存在 说明 是自己的个人中心
       this.my_id = id;
@@ -109,6 +109,10 @@ export default {
       // 通过 _id 来获取这个人 的 个人信息
       this.user_id = _id;
       this.find_friend(this.user_id);
+    }
+    if (has_id) {
+      // has_id 存在 说明 是已经加过好友 可以直接聊天
+      this.find_friend(has_id);
     }
     this.initScroll();
   },
@@ -157,10 +161,9 @@ export default {
     },
     // 点击 加为好友  并且要实时告诉到对方
     async add_user() {
+      // 0 首先判断是否已经向这个好友发送过请求 并且确定是否操作，如果操作了则可以重复发 否则提醒 已经发过请求
       // 1 先发送 好友申请请求
       await this.to_user();
-      // 2 实时告诉对方
-      socket.emit('addFriend',  this.user._id);
     },
     async to_user() {
       addUser({
@@ -168,7 +171,13 @@ export default {
         from_id: this.userInfo._id
       })
         .then(res => {
-          this.$store.dispatch("setShowWarn", "好友请求 发送成功!");
+          if (res.data.code == 1) {
+            this.$store.dispatch("setShowWarn", res.data.msg);
+          } else {
+            this.$store.dispatch("setShowWarn", "好友请求 发送成功!");
+            // 2 实时告诉对方
+            this.$socket.emit("addFriend", this.user._id);
+          }
           console.log(res);
         })
         .catch(err => {

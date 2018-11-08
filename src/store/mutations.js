@@ -2,8 +2,8 @@ import * as types from './mutation_types';
 
 export const state = {
   'loginStatus': JSON.parse(localStorage.getItem('loginStatus')) || {},
-  'userInfo': JSON.parse(localStorage.getItem('userInfo')) || {}
-
+  'userInfo': JSON.parse(localStorage.getItem('userInfo')) || {},
+  'apply_nums': 0
 }
 
 export const mutations = {
@@ -19,8 +19,18 @@ export const mutations = {
     localStorage.setItem('loginStatus', JSON.stringify(state.loginStatus));
     localStorage.setItem('userInfo', JSON.stringify(state.userInfo));
   },
+  // 退出登录
   [types.LOGOUT](state) {
     clear(state);
+  },
+  // 好友申请消息提示
+  [types.APPLY_FRIENDS_NUM](state) {
+    state.apply_nums++
+    console.log(state.apply_nums);
+  },
+  // 好友申请消息提示 清零
+  [types.REMOVE_APPLY](state) {
+    state.apply_nums = 0;
   }
 }
 function clear(state) {

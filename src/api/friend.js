@@ -29,3 +29,18 @@ export const addUser = ({
     method: 'get'
   });
 }
+// 加载好友请求列表
+export const applyList = ({ id }) => {
+  return axios.request({
+    url: '/friend/applyList?id=' + id,
+    method: 'get'
+  });
+}
+
+// 查看是否 是自己的好友
+export const if_friend = ({ _id }) => {
+  return axios.request({
+    url: '/friend/if_friend?id=' + _id,
+    method: 'get'
+  });
+}

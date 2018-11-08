@@ -119,10 +119,8 @@ export default {
       })
         .then(res => {
           if (res.data == 1) {
-            this.$store.dispatch(
-              "setShowWarn",
-              "该手机号已被注册，请重新输入!"
-            );
+          } else {
+            this.$store.dispatch("setShowWarn", "该手机号还未注册!");
             this.phone = "";
           }
         })

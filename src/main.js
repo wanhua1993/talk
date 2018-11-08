@@ -10,7 +10,7 @@ import VueSocketio from 'vue-socket.io';
 import socketio from 'socket.io-client';
 
 Vue.config.productionTip = false
-const socket = socketio('http://192.168.0.87:3001/');
+const socket = socketio('http://192.168.1.7:3001/');
 Vue.use(Vuex);
 Vue.use(VueSocketio, socket);//与服务端链接
 // 用于 用户刷新 更改 socketId

@@ -138,6 +138,9 @@ export default {
       show: false
     };
   },
+  mounted() {
+    
+  },
   methods: {
     toDetail() {
       this.$router.push("/chatroom");
@@ -150,7 +153,7 @@ export default {
     },
     // 添加好友页面
     to_add() {
-      this.$router.push('/addFriend');
+      this.$router.push("/addFriend");
     }
   }
 };

@@ -60,6 +60,7 @@ export default {
         user: this.user
       })
         .then(res => {
+          console.log(res);
           if (res.data.length) {
             // 登录成功以后 设置登录状态 存储用户信息
             // socket 发送到后台
@@ -73,7 +74,7 @@ export default {
             this.$store.commit("SET_LOGIN", value);
             // 利用 socket 发送后台 设置后台登陆 应该是将用户存储起来。。。
             // socket.emit("login", res.data[0]._id);
-            this.$socket.emit('login', res.data[0]._id);
+            this.$socket.emit("login", res.data[0]._id);
             this.$router.push("/message");
           } else {
             this.$store.dispatch("setShowWarn", "请输入正确的用户名密码!");

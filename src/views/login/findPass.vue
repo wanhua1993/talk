@@ -118,6 +118,7 @@ export default {
         phone
       })
         .then(res => {
+          console.log(res);
           if (res.data == 1) {
           } else {
             this.$store.dispatch("setShowWarn", "该手机号还未注册!");

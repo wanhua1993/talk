@@ -165,6 +165,7 @@ export default {
           phone
         })
           .then(res => {
+            console.log(res);
             if (res.data == 1) {
               this.$store.dispatch(
                 "setShowWarn",

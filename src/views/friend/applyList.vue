@@ -20,7 +20,7 @@
                     <p class="apply_username">
                         {{item.from_id.username}}
                     </p>
-                    <p class="apply_btn" v-if="item.status==0" @click="accept()">
+                    <p class="apply_btn" v-if="item.status==0" @click="accept(item._id, item.from_id._id)">
                         接受
                     </p>
                     <p class="" v-if="item.status==1">
@@ -35,7 +35,7 @@
 <script>
 import { mapGetters } from "vuex";
 import baseUrl from "@/config/";
-import { applyList } from "@/api/friend";
+import { applyList, apply_status } from "@/api/friend";
 export default {
   data() {
     return {
@@ -71,8 +71,24 @@ export default {
         });
     },
     // 接受好友请求
-    accept() {
-        
+    accept(_id, from_id) {
+      let to_id = this.userInfo._id;
+      // 先修改 好友状态为 1
+      // 然后 再做增加聊天消息 这一栏
+      this.$socket.emit("apply_friend", { from_id, to_id });
+      apply_status({
+        _id
+      })
+        .then(res => {
+          this.apply_list.forEach(item => {
+            if (item._id == _id) {
+              item.status = 1;
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

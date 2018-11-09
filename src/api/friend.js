@@ -44,3 +44,11 @@ export const if_friend = ({ _id }) => {
     method: 'get'
   });
 }
+
+// 点击 接受 好友请求
+export const apply_status = ({_id}) => {
+  return axios.request({
+    url: `/friend/apply_status?_id=${_id}`,
+    method: 'get'
+  });
+} 

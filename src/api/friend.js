@@ -46,9 +46,24 @@ export const if_friend = ({ _id }) => {
 }
 
 // 点击 接受 好友请求
-export const apply_status = ({_id}) => {
+export const apply_status = ({ _id }) => {
   return axios.request({
     url: `/friend/apply_status?_id=${_id}`,
     method: 'get'
   });
-} 
+}
+
+// 加载好友列表
+export const friends_list = ({ user_id }) => {
+  return axios.request({
+    url: `/friend/friends_list?user_id=${user_id}`,
+    method: 'get'
+  });
+}
+// 加载聊天消息
+export const mess_list = ({ user_id }) => {
+  return axios.request({
+    url: `/friend/mess_list?user_id=${user_id}`,
+    method: 'get'
+  });
+}

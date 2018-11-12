@@ -18,10 +18,10 @@
           </p>
           <ul class="first_ul">
             <li class="first_li" v-for="(item, index) in userList" :key="index">
-              <p>{{item.type}}</p>
+              <p v-if='item.list.length'>{{item.type}}</p>
               <ul>
-                <li v-for="(val, ind) in item.list" :key="ind" @click="to_user()">
-                  <img :src="val.avatar" alt="" class="user_avatar">
+                <li v-for="(val, ind) in item.list" :key="ind" @click="to_user(val._id)">
+                  <img :src="url + val.avatar" alt="" class="user_avatar">
                   <p class="user_name">
                     {{val.username}}
                   </p>
@@ -36,79 +36,62 @@
 <script>
 import Footer from "@/views/common/footer";
 import { mapGetters } from "vuex";
+import { friends_list } from "@/api/friend";
+import baseUrl from '@/config/index'
 export default {
   components: {
     Footer
   },
   data() {
     return {
-      userList: [
-        {
-          type: "A",
-          list: [
-            {
-              username: "小天",
-              avatar: require("@/assets/meinv1.jpg")
-            },
-            {
-              username: "小花",
-              avatar: require("@/assets/meinv2.jpg")
-            },
-            {
-              username: "小胡",
-              avatar: require("@/assets/meinv3.jpg")
-            }
-          ]
-        },
-        {
-          type: "B",
-          list: [
-            {
-              username: "小天",
-              avatar: require("@/assets/meinv1.jpg")
-            },
-            {
-              username: "小花",
-              avatar: require("@/assets/meinv2.jpg")
-            }
-          ]
-        },
-        {
-          type: "C",
-          list: [
-            {
-              username: "小天",
-              avatar: require("@/assets/meinv1.jpg")
-            },
-            {
-              username: "小花",
-              avatar: require("@/assets/meinv2.jpg")
-            },
-            {
-              username: "小胡",
-              avatar: require("@/assets/meinv3.jpg")
-            },
-            {
-              username: "小已",
-              avatar: require("@/assets/meinv4.jpg")
-            }
-          ]
-        }
-      ]
+      userList: [],
+      EN: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      url: baseUrl.baseUrl.dev
     };
   },
   computed: {
-    ...mapGetters(["applyNums"])
+    ...mapGetters(["applyNums"]),
+    ...mapGetters(['userInfo'])
+  },
+  mounted() {
+    this.load_EN();
+    // 加载好列表
+    this.load_friends(this.userInfo._id);
   },
   methods: {
-    to_user() {
-      this.$router.push("/usercenter");
+    load_EN() {
+      this.userList = this.EN.map((item) => {
+        return {
+          type: item,
+          list: []
+        }
+      });
+    },
+    load_friends(user_id) {
+      friends_list({
+        user_id
+      })
+        .then(res => {
+          this.userList.forEach((item, index) => {
+            res.data.forEach((val) => {
+              if(item.type == val.type) {
+                this.userList[index].list.push(val.user);
+              }
+            })
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    to_user(_id) {
+      this.$router.push("/usercenter?has_id=" + _id);
     },
     // 点击进入好友申请列表
     to_apply_list() {
       // 点击进去以后 所有的申请 状态清零
-      this.$store.commit('REMOVE_APPLY');
-      this.$router.push('/applyList');
+      this.$store.commit("REMOVE_APPLY");
+      this.$router.push("/applyList");
     }
   }
 };

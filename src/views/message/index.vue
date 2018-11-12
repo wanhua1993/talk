@@ -54,6 +54,9 @@
 <script>
 import Footer from "@/views/common/footer";
 import Header from "@/views/common/header";
+import baseurl from "@/config/index";
+import { mapGetters } from "vuex";
+import { mess_list } from "@/api/friend";
 export default {
   components: {
     Footer,
@@ -61,85 +64,20 @@ export default {
   },
   data() {
     return {
-      mess_list: [
-        {
-          username: "爱吃西红柿",
-          content: "你在干嘛呢？",
-          time: "2018-10-31",
-          avatar: require("@/assets/meinv1.jpg")
-        },
-        {
-          username: "西红柿",
-          content: "我在看电视！",
-          time: "2018-10-31",
-          avatar: require("@/assets/meinv2.jpg")
-        },
-        {
-          username: "爱吃",
-          content: "我在睡觉！",
-          time: "2018-8-31",
-          avatar: require("@/assets/meinv3.jpg")
-        },
-        {
-          username: "奈特",
-          content: "我在谈恋爱",
-          time: "2018-10-30",
-          avatar: require("@/assets/meinv4.jpg")
-        },
-        {
-          username: "爱吃西红柿",
-          content: "你在干嘛呢？",
-          time: "2018-10-31",
-          avatar: require("@/assets/meinv1.jpg")
-        },
-        {
-          username: "西红柿",
-          content: "我在看电视！",
-          time: "2018-10-31",
-          avatar: require("@/assets/meinv2.jpg")
-        },
-        {
-          username: "爱吃",
-          content: "我在睡觉！",
-          time: "2018-8-31",
-          avatar: require("@/assets/meinv3.jpg")
-        },
-        {
-          username: "奈特",
-          content: "我在谈恋爱",
-          time: "2018-10-30",
-          avatar: require("@/assets/meinv4.jpg")
-        },
-        {
-          username: "爱吃西红柿",
-          content: "你在干嘛呢？",
-          time: "2018-10-31",
-          avatar: require("@/assets/meinv1.jpg")
-        },
-        {
-          username: "西红柿",
-          content: "我在看电视！",
-          time: "2018-10-31",
-          avatar: require("@/assets/meinv2.jpg")
-        },
-        {
-          username: "爱吃",
-          content: "我在睡觉！",
-          time: "2018-8-31",
-          avatar: require("@/assets/meinv3.jpg")
-        },
-        {
-          username: "奈特",
-          content: "我在谈恋爱",
-          time: "2018-10-30",
-          avatar: require("@/assets/meinv4.jpg")
-        }
-      ],
+      url: baseurl.baseUrl.dev,
+      mess_list: [],
       show: false
     };
   },
+  computed: {
+    ...mapGetters(['userInfo', 'allMessage'])
+  },
+  created() {
+    this.$store.dispatch("getAllMessage", this.userInfo._id);
+  },
   mounted() {
-    
+    // 加载聊天消息
+    console.log(this.allMessage);
   },
   methods: {
     toDetail() {

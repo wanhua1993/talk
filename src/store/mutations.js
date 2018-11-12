@@ -26,7 +26,6 @@ export const mutations = {
   // 好友申请消息提示
   [types.APPLY_FRIENDS_NUM](state) {
     state.apply_nums++
-    console.log(state.apply_nums);
   },
   // 好友申请消息提示 清零
   [types.REMOVE_APPLY](state) {

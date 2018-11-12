@@ -25,12 +25,15 @@ export default new Router({
     {
       path: '/message',
       name: 'Message',
-      component: Message
+      component: Message,
     },
     {
       path: '/friend',
       name: 'friend',
-      component: Friend
+      component: Friend,
+      meta: {
+        keepAlive: true // 需要被缓存
+      }
     },
     {
       path: '/login',

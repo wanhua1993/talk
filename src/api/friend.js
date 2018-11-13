@@ -38,9 +38,9 @@ export const applyList = ({ id }) => {
 }
 
 // 查看是否 是自己的好友
-export const if_friend = ({ _id }) => {
+export const if_friend = ({ _id, userId }) => {
   return axios.request({
-    url: '/friend/if_friend?id=' + _id,
+    url: `/friend/if_friend?id=${_id}&userId=${userId}`,
     method: 'get'
   });
 }

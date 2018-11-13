@@ -31,9 +31,6 @@ export default new Router({
       path: '/friend',
       name: 'friend',
       component: Friend,
-      meta: {
-        keepAlive: true // 需要被缓存
-      }
     },
     {
       path: '/login',

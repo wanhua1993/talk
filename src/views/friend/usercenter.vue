@@ -98,7 +98,6 @@ export default {
   },
   mounted() {
     let { id, _id, has_id } = this.$route.query;
-    console.log(has_id);
     if (id) {
       // id  存在 说明 是自己的个人中心
       this.my_id = id;

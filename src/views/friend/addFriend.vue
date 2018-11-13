@@ -26,12 +26,16 @@
 </template>
 <script>
 import { search_friend, if_friend } from "@/api/friend";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       number: "",
       show: false
     };
+  },
+  computed: {
+    ...mapGetters(["userInfo"])
   },
   methods: {
     focus() {
@@ -51,7 +55,7 @@ export default {
         .then(async res => {
           if (res.data.length) {
             let _id = res.data[0]._id;
-            let flag = await this.if_myfriend(_id);
+            let flag = await this.if_myfriend(_id, this.userInfo._id);
             if (flag) {
               this.$router.push("/usercenter?_id=" + _id);
             } else {
@@ -66,10 +70,11 @@ export default {
         });
     },
     // 看看该好友是否存在 在自己的好友列表中
-    async if_myfriend(_id) {
+    async if_myfriend(_id, userId) {
       let res = await new Promise(resolve => {
         if_friend({
-          _id
+          _id,
+          userId
         })
           .then(res => {
             if (res.data.length) {

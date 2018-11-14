@@ -12,10 +12,10 @@
               <ul>
                 <li v-for="(item, index) in mess_list" :key='index' @click="toDetail()">
                     <span class="mess_avatar">
-                        <img :src="item.avatar" alt="头像">
+                        <img :src="url + item.avatar" alt="头像">
                     </span>
                     <p class="mess_name">{{item.username}}</p>
-                    <p class="mess_con">{{item.content}}</p>
+                    <p class="mess_con">{{item.value}}</p>
                     <span class="mess_time">
                         {{item.time}}
                     </span>
@@ -57,6 +57,7 @@ import Header from "@/views/common/header";
 import baseurl from "@/config/index";
 import { mapGetters } from "vuex";
 import { mess_list } from "@/api/friend";
+import { parseChatTime, parseMessageTime } from "@/lib/parseTime";
 export default {
   components: {
     Footer,
@@ -66,20 +67,45 @@ export default {
     return {
       url: baseurl.baseUrl.dev,
       mess_list: [],
-      show: false
+      show: false,
+      userId: ''
     };
   },
   computed: {
-    ...mapGetters(['userInfo', 'allMessage'])
+    ...mapGetters(["userInfo", "allMessage"])
   },
   created() {
-    this.$store.dispatch("getAllMessage", this.userInfo._id);
+    this.userId = this.userInfo._id;
+    this.$store.dispatch("getAllMessage", this.userId);
+
   },
   mounted() {
     // 加载聊天消息
-    console.log(this.allMessage);
+    this.get_messList(this.userId);
   },
   methods: {
+    get_messList(user_id) {
+      mess_list({
+        user_id
+      })
+        .then(res => {
+          let value = res.data;
+          value.forEach((item, index) => {
+            value[index].time = parseMessageTime(Date.parse(item.time));
+            if(this.userId == item.from_id) {
+              value[index]['avatar'] = item.to_user.avatar;
+              value[index]['username'] = item.to_user.username;
+            } else {
+              value[index]['avatar'] = item.from_user.avatar;
+              value[index]['username'] = item.from_user.username;
+            }
+          });
+          this.mess_list = value;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     toDetail() {
       this.$router.push("/chatroom");
     },
@@ -104,9 +130,11 @@ export default {
   box-sizing: border-box;
 }
 .con {
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 100%;
+  background: rgb(243, 243, 243);
+
 }
 .header_list {
   width: 130px;
@@ -151,7 +179,7 @@ export default {
   border-color: transparent transparent #fcbcf3 transparent;
 }
 .w_search {
-  background: rgb(236, 235, 235);
+  /* background: rgb(236, 235, 235); */
   width: 100%;
   height: 40px;
   margin-top: 60px;
@@ -183,9 +211,7 @@ export default {
 .mes_content {
   position: relative;
   width: 100%;
-  min-height: 100%;
   margin-bottom: 70px;
-  background: rgb(243, 243, 243);
 }
 .mark {
   position: fixed;

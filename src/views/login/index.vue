@@ -74,6 +74,7 @@ export default {
             this.$store.commit("SET_LOGIN", value);
             // 利用 socket 发送后台 设置后台登陆 应该是将用户存储起来。。。
             // socket.emit("login", res.data[0]._id);
+            // this.$store.dispatch("getAllMessage", res.data[0]._id);
             this.$socket.emit("login", res.data[0]._id);
             this.$router.push("/message");
           } else {

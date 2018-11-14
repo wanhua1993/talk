@@ -11,37 +11,59 @@
         <div class="info_list">
             <ul class="info_ul">
                 <li class="info_li">
-                    <p>照片墙</p>
+                    <p>
+                        <router-link to='userInfo'>照片墙</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>头像</p>
+                    <p>
+                        <router-link to='avatar'>头像</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>签名</p>
+                    <p>
+                        <router-link to='userSing'>签名</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>昵称</p>
+                    <p>
+                        <router-link to='username'>昵称</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>性别</p>
+                    <p>
+                        <router-link to='sex'>性别</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>生日</p>
+                    <p>
+                        <router-link to='birth'>生日</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>职业</p>
+                    <p>
+                        <router-link to='job'>职业</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>公司</p>
+                    <p>
+                        <router-link to='company'>公司</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>学校</p>
+                    <p>
+                        <router-link to='school'>学校</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>所在地</p>
+                    <p>
+                        <router-link to='address'>所在地</router-link>
+                    </p>
                 </li>
                 <li class="info_li">
-                    <p>个人说明</p>
+                    <p>
+                        <router-link to='info'>个人说明</router-link>
+                    </p>
                 </li>
             </ul>
         </div>
@@ -144,5 +166,9 @@ export default {
   margin-left: 20px;
   text-align: left;
   font-size: 14px;
+}
+.info_li p a {
+    display: block;
+    color: #000;
 }
 </style>

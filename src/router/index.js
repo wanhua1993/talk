@@ -17,6 +17,7 @@ const EditInfo = asyncComponent('friend/editInfo');
 const FindPass = asyncComponent('login/findPass');
 const UpdatePass = asyncComponent('login/updatePass');
 const ApplyList = asyncComponent('friend/applyList');
+const UserInfo = asyncComponent('userInfo');
 
 Vue.use(Router)
 
@@ -86,6 +87,11 @@ export default new Router({
       path: '/applyList',
       name: 'ApplyList',
       component: ApplyList
+    },
+    {
+      path: '/userInfo',
+      name: 'UserInfo',
+      component: UserInfo
     }
   ]
 })

@@ -3,7 +3,7 @@
         <p>
             聆语
             <span class="first" @click='user_center()'>
-                <img :src="avatar" alt="头像">
+                <img :src="url + avatar" alt="头像">
             </span>
             <span class="second" @click='btn_show'>
                 <img src="../../../assets/jia.png" alt="" width="32px" height="32px">
@@ -13,15 +13,20 @@
 </template>
 <script>
 import {mapGetters} from 'vuex';
+import baseUrl from '@/config/index';
 export default {
   data() {
     return {
       show: false,
-      avatar: require("@/assets/meinv1.jpg")
+      avatar: '',
+      url: baseUrl.baseUrl.dev
     };
   },
   computed: {
     ...mapGetters(['userInfo'])
+  },
+  mounted() {
+    this.avatar = this.userInfo.avatar;
   },
   methods: {
     btn_show() {

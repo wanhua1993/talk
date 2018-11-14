@@ -1,12 +1,10 @@
 <template>
-    <div>
         <ul>
             <li v-for="(item, index) in menuList" :key="index" @click='toPath(item.url)' >
                 {{item.value}} 
                 <span v-if="item.apply&&applyNums != 0" class="applyNums">{{applyNums}}</span>
             </li>
         </ul>
-    </div>
 </template>
 
 <script>
@@ -31,15 +29,13 @@ export default {
           apply: false
         }
       ],
-      nums: 0,
+      nums: 0
     };
   },
   computed: {
     ...mapGetters(["applyNums"])
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     toPath(path) {
       this.$router.push(path);

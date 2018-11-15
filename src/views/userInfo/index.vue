@@ -29,6 +29,7 @@
 <script>
 import { mapGetters } from "vuex";
 import baseUrl from "@/config/index";
+import { uploadPhotos, photosList } from "@/api/user";
 export default {
   data() {
     return {
@@ -61,8 +62,22 @@ export default {
   computed: {
     ...mapGetters(["userInfo"])
   },
-  mounted() {},
+  mounted() {
+    // 加载图片
+    this.load_photos();
+  },
   methods: {
+    load_photos() {
+      photosList({
+        user_id: this.userInfo._id
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     edit_img() {
       this.show_circle = !this.show_circle;
     },
@@ -85,6 +100,15 @@ export default {
           show: false
         });
       };
+      let formdata = new FormData();
+      formdata.append("file", file.files[0]);
+      uploadPhotos({ formdata, user_id: this.userInfo._id })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

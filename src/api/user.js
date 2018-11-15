@@ -1,19 +1,18 @@
-import axios from '@/lib/api/request';
-export const upload_blog = ({ title, content }) => {
-    const data = {
-      title,
-      content
-    }
-  
-    return axios.request({
-      url: '/blog/up_blog',
-      data,
-      method: 'post'
-    })
-  }
-  export const load_blog = ({ }) => {
-    return axios.request({
-      url: '/blog/load_blog',
-      method: 'get'
-    })
-  }
+import axios from '@/lib/api.request';
+export const uploadPhotos = ({ formdata, user_id }) => {
+  return axios.request({
+    url: '/info/uploadPhotos?user_id=' + user_id,
+    data: formdata,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    method: 'post'
+  })
+}
+// 加载图片列表
+export const photosList = ({ user_id }) => {
+  return axios.request({
+    url: `info/photosList?user_id=${user_id}`,
+    method: 'get'
+  });
+}

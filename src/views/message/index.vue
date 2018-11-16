@@ -56,7 +56,7 @@ import Footer from "@/views/common/footer";
 import Header from "@/views/common/header";
 import baseurl from "@/config/index";
 import { mapGetters } from "vuex";
-import { mess_list } from "@/api/friend";
+import { mess_list, zhifubao } from "@/api/friend";
 import { parseChatTime, parseMessageTime } from "@/lib/parseTime";
 export default {
   components: {
@@ -68,7 +68,7 @@ export default {
       url: baseurl.baseUrl.dev,
       mess_list: [],
       show: false,
-      userId: ''
+      userId: ""
     };
   },
   computed: {
@@ -77,13 +77,24 @@ export default {
   created() {
     this.userId = this.userInfo._id;
     this.$store.dispatch("getAllMessage", this.userId);
-
   },
   mounted() {
     // 加载聊天消息
     this.get_messList(this.userId);
+    // this.zhifu();
   },
   methods: {
+    zhifu() {
+      zhifubao()
+        .then(res => {
+          let form = document.getElementById('form');
+          form.innerHTML = res.data.html;
+          document.forms["alipaysubmit"].submit();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     get_messList(user_id) {
       mess_list({
         user_id
@@ -92,12 +103,12 @@ export default {
           let value = res.data;
           value.forEach((item, index) => {
             value[index].time = parseMessageTime(Date.parse(item.time));
-            if(this.userId == item.from_id) {
-              value[index]['avatar'] = item.to_user.avatar;
-              value[index]['username'] = item.to_user.username;
+            if (this.userId == item.from_id) {
+              value[index]["avatar"] = item.to_user.avatar;
+              value[index]["username"] = item.to_user.username;
             } else {
-              value[index]['avatar'] = item.from_user.avatar;
-              value[index]['username'] = item.from_user.username;
+              value[index]["avatar"] = item.from_user.avatar;
+              value[index]["username"] = item.from_user.username;
             }
           });
           this.mess_list = value;
@@ -134,7 +145,6 @@ export default {
   width: 100%;
   height: 100%;
   background: rgb(243, 243, 243);
-
 }
 .header_list {
   width: 130px;

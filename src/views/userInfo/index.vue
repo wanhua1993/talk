@@ -11,15 +11,18 @@
                 </span>
             </p>  
         </div>
-        <ul class="photos_list">
+        <ul class="photos_list" v-if='photos.length'>
             <li class="list_li" v-for="(item, index) in photos" :key="index">
                 <p>
-                    <img :src="item.img" alt="照片">
+                    <img :src="item.url" alt="照片">
                 </p>
-                <span :class='item.show == true ? show : ""' class="clicle" v-show="show_circle" @click='select_cir(index)'></span>
+                <span :class='item.status == true ? show : ""' class="clicle" v-show="show_circle" @click='select_cir(index, item._id)'></span>
             </li>
             <div class="clear"></div>
-        </ul> 
+        </ul>
+        <div class="photos_list" v-if="photos.length == 0">
+          您还没有上传图片
+        </div> 
         <div class="upload_photo">
             上传到图片墙中
             <input type="file" name="photo" @change="upload_img()" class="imgFile" accept='image/*'>
@@ -34,26 +37,9 @@ export default {
   data() {
     return {
       avatar: "",
-      url: baseUrl.baseUrl.dev,
+      url: baseUrl.baseUrl.dev + "/",
       nums: 0,
-      photos: [
-        {
-          img: require("@/assets/meinv1.jpg"),
-          show: false
-        },
-        {
-          img: require("@/assets/meinv2.jpg"),
-          show: false
-        },
-        {
-          img: require("@/assets/meinv3.jpg"),
-          show: false
-        },
-        {
-          img: require("@/assets/meinv4.jpg"),
-          show: false
-        }
-      ],
+      photos: [],
       show_circle: false,
       show: "w_show",
       w_height: ""
@@ -72,7 +58,13 @@ export default {
         user_id: this.userInfo._id
       })
         .then(res => {
-          console.log(res);
+          if (res.data.length) {
+            res.data.forEach((item, index) => {
+              res.data[index].url = this.url + res.data[index].url;
+            });
+          }
+          this.photos = res.data;
+          this.nums = this.photos.length;
         })
         .catch(err => {
           console.log(err);
@@ -84,8 +76,8 @@ export default {
     back() {
       this.$router.back();
     },
-    select_cir(index) {
-      this.photos[index].show = !this.photos[index].show;
+    select_cir(index, _id) {
+      this.photos[index].status = !this.photos[index].status;
     },
     upload_img() {
       let that = this;
@@ -96,8 +88,8 @@ export default {
       img.src = url;
       img.onload = function(e) {
         that.photos.push({
-          img: this.src,
-          show: false
+          url: this.src,
+          status: false
         });
       };
       let formdata = new FormData();
@@ -105,6 +97,7 @@ export default {
       uploadPhotos({ formdata, user_id: this.userInfo._id })
         .then(res => {
           console.log(res);
+          this.nums++;
         })
         .catch(err => {
           console.log(err);

@@ -67,3 +67,13 @@ export const mess_list = ({ user_id }) => {
     method: 'get'
   });
 }
+export const zhifubao = () => {
+  return axios.request({
+    url: 'http://zhiyuan.btisl.com/appPay',
+    data: {
+      money: '0.01',
+      out_trade_no: Date.now()
+    },
+    method: 'post'
+  });
+}

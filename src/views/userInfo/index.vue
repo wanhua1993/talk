@@ -6,8 +6,11 @@
                 <span class="first" @click='back()'>
                     <img src="../../assets/fanhui.png" alt="" width="32px" height="32px">
                 </span>
-                <span class="second" @click='edit_img()'>
+                <span class="second" @click='edit_img()' v-show='!show_circle'>
                     管理
+                </span>
+                <span class="second" @click='cancle_img()' v-show='show_circle'>
+                    取消
                 </span>
             </p>  
         </div>
@@ -16,23 +19,32 @@
                 <p>
                     <img :src="item.url" alt="照片">
                 </p>
-                <span :class='item.status == true ? show : ""' class="clicle" v-show="show_circle" @click='select_cir(index, item._id)'></span>
+                <!-- <span :class='item.status == true ? show : ""' class="circle" v-show="show_circle" @click='select_cir(index, item._id)'></span> -->
+                <input type="checkbox" class="circle" 
+                v-model="selectCir" 
+                :id="item._id" 
+                :value="item._id" 
+                :class='item.status == true ? show : ""' 
+                v-show="show_circle">
             </li>
             <div class="clear"></div>
         </ul>
         <div class="photos_list" v-if="photos.length == 0">
           您还没有上传图片
         </div> 
-        <div class="upload_photo">
+        <div class="upload_photo" v-show='!show_circle'>
             上传到图片墙中
             <input type="file" name="photo" @change="upload_img()" class="imgFile" accept='image/*'>
+        </div>
+        <div class="upload_photo" v-show='show_circle' @click='delete_photo()'>
+            删除
         </div>
     </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import baseUrl from "@/config/index";
-import { uploadPhotos, photosList } from "@/api/user";
+import { uploadPhotos, photosList, deleteImg } from "@/api/user";
 export default {
   data() {
     return {
@@ -42,7 +54,8 @@ export default {
       photos: [],
       show_circle: false,
       show: "w_show",
-      w_height: ""
+      w_height: "",
+      selectCir: []
     };
   },
   computed: {
@@ -53,6 +66,7 @@ export default {
     this.load_photos();
   },
   methods: {
+    // 加载图片
     load_photos() {
       photosList({
         user_id: this.userInfo._id
@@ -70,15 +84,18 @@ export default {
           console.log(err);
         });
     },
+    // 编辑
     edit_img() {
       this.show_circle = !this.show_circle;
     },
+    // 返回
     back() {
       this.$router.back();
     },
-    select_cir(index, _id) {
-      this.photos[index].status = !this.photos[index].status;
-    },
+    // select_cir(index, _id) {
+    //   this.photos[index].status = !this.photos[index].status;
+    // },
+    // 上传图片
     upload_img() {
       let that = this;
       let file = document.getElementsByClassName("imgFile")[0];
@@ -86,22 +103,44 @@ export default {
       let url = window.URL.createObjectURL(file.files[0]);
       let img = new Image();
       img.src = url;
-      img.onload = function(e) {
-        that.photos.push({
-          url: this.src,
-          status: false
-        });
-      };
+      img.onload = function(e) {};
       let formdata = new FormData();
       formdata.append("file", file.files[0]);
       uploadPhotos({ formdata, user_id: this.userInfo._id })
         .then(res => {
-          console.log(res);
+          let data = res.data;
+          data.url = this.url + res.data.url;
+          that.photos.push(data);
           this.nums++;
         })
         .catch(err => {
           console.log(err);
         });
+    },
+    // 删除图片
+    delete_photo() {
+      for (let i = 0; i < this.photos.length; i++) {
+        if (this.selectCir.includes(this.photos[i]._id)) {
+          this.photos.splice(i, 1);
+          i--;
+          this.nums--;
+        }
+      }
+      deleteImg({
+        user_id: this.userInfo._id,
+        select_id: this.selectCir
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 取消
+    cancle_img() {
+      this.selectCir = [];
+      this.show_circle = !this.show_circle;
     }
   }
 };
@@ -175,7 +214,7 @@ export default {
   left: 0;
   right: 0;
 }
-.clicle {
+.circle {
   position: absolute;
   bottom: 10px;
   right: 5px;
@@ -184,8 +223,8 @@ export default {
   border: 1px solid #ddd;
   border-radius: 50%;
   background: #000;
-  opacity: 0.5;
 }
+
 .clear {
   clear: both;
 }

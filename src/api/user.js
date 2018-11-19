@@ -16,3 +16,14 @@ export const photosList = ({ user_id }) => {
     method: 'get'
   });
 }
+// 删除图片
+export const deleteImg = ({ user_id, select_id }) => {
+  return axios.request({
+    url: 'info/deleteImg',
+    data: {
+      user_id,
+      select_id
+    },
+    method: 'post'
+  });
+}

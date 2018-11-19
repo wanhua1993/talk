@@ -49,8 +49,9 @@
 import Warn from "@/components/warn";
 import BScroll from "better-scroll";
 import { find_one_user, addUser } from "@/api/friend";
-import baseUrl from "@/config/";
+import baseUrl from "@/config/index";
 import { mapGetters } from "vuex";
+import { uploadPhotos, photosList, deleteImg } from "@/api/user";
 export default {
   components: {
     Warn
@@ -61,36 +62,12 @@ export default {
       username: "爱吃番茄柿",
       id: "20181102",
       avatar: require("@/assets/meinv1.jpg"),
-      menuList: [
-        {
-          value: "耳语",
-          url: require("@/assets/meinv1.jpg")
-        },
-        {
-          value: "聆友",
-          url: require("@/assets/meinv2.jpg")
-        },
-        {
-          value: "今说",
-          url: require("@/assets/meinv3.jpg")
-        },
-        {
-          value: "aa",
-          url: require("@/assets/meinv4.jpg")
-        },
-        {
-          value: "耳语",
-          url: require("@/assets/meinv1.jpg")
-        },
-        {
-          value: "聆友",
-          url: require("@/assets/meinv2.jpg")
-        }
-      ],
+      menuList: [],
       user_id: "",
       my_id: "",
       title: "她的资料",
-      user: {}
+      user: {},
+      url: baseUrl.baseUrl.dev + "/"
     };
   },
   computed: {
@@ -114,11 +91,29 @@ export default {
       // has_id 存在 说明 是已经加过好友 可以直接聊天
       this.find_friend(has_id);
     }
-    this.initScroll();
+    this.load_img();
   },
   methods: {
     back() {
       this.$router.back();
+    },
+    // 加载图片库
+    load_img() {
+      photosList({
+        user_id: this.userInfo._id
+      })
+        .then(res => {
+          if (res.data.length) {
+            res.data.forEach((item, index) => {
+              res.data[index].url = this.url + res.data[index].url;
+            });
+          }
+          this.menuList = res.data;
+          this.initScroll();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     initScroll() {
       let width = this.menuList.length * 100;

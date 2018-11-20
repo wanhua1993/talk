@@ -18,6 +18,8 @@ const FindPass = asyncComponent('login/findPass');
 const UpdatePass = asyncComponent('login/updatePass');
 const ApplyList = asyncComponent('friend/applyList');
 const UserInfo = asyncComponent('userInfo');
+const Avatar = asyncComponent('userInfo/avatar');
+const UserSign = asyncComponent('userInfo/userSign');
 
 Vue.use(Router)
 
@@ -92,6 +94,16 @@ export default new Router({
       path: '/userInfo',
       name: 'UserInfo',
       component: UserInfo
+    },
+    {
+      path: '/avatar',
+      name: 'Avatar',
+      component: Avatar
+    },
+    {
+      path: '/usersign',
+      name: 'UserSign',
+      component: UserSign
     }
   ]
 })

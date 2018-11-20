@@ -22,17 +22,22 @@
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='userSing'>签名</router-link>
+                        <router-link to='userSign'>
+                            签名
+                            <span class="sign_span">{{userInfo.signature}}</span>
+                        </router-link>
                     </p>
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='username'>昵称</router-link>
+                        昵称
+                        <input type="text" name="username" v-model='username' class="sign_input" @blur='onBlur()'>
                     </p>
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='sex'>性别</router-link>
+                        性别
+                        
                     </p>
                 </li>
                 <li class="info_li">
@@ -75,13 +80,41 @@
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import { setUsername } from "@/api/user";
 export default {
   data() {
-    return {};
+    return {
+      username: ""
+    };
+  },
+  computed: {
+    ...mapGetters(["userInfo"])
+  },
+  mounted() {
+    this.username = this.userInfo.username;
   },
   methods: {
     back() {
       this.$router.back();
+    },
+    onBlur() {
+      setUsername({
+        user_id: this.userInfo._id,
+        username: this.username
+      })
+        .then(res => {
+          let value = {
+            data: res.data,
+            loginStatus: {
+              isLogin: true
+            }
+          };
+          this.$store.commit("SET_LOGIN", value);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };
@@ -168,7 +201,18 @@ export default {
   font-size: 14px;
 }
 .info_li p a {
-    display: block;
-    color: #000;
+  display: block;
+  color: #000;
+}
+.sign_span {
+  display: inline-block;
+  margin-left: 20px;
+}
+.sign_input {
+  display: inline-block;
+  width: 70%;
+  outline: none;
+  border: none;
+  margin-left: 20px;
 }
 </style>

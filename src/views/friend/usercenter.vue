@@ -67,7 +67,7 @@ export default {
       my_id: "",
       title: "她的资料",
       user: {},
-      url: baseUrl.baseUrl.dev + "/"
+      url: baseUrl.baseUrl.dev
     };
   },
   computed: {

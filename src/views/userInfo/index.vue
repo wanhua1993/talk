@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       avatar: "",
-      url: baseUrl.baseUrl.dev + "/",
+      url: baseUrl.baseUrl.dev,
       nums: 0,
       photos: [],
       show_circle: false,

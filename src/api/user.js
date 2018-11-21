@@ -52,3 +52,17 @@ export const setUsername = ({ user_id, username }) => {
     method: 'get'
   });
 }
+// 设置性别
+export const setSex = ({ user_id, sex }) => {
+  return axios.request({
+    url: `/info/setSex?user_id=${user_id}&sex=${sex}`,
+    method: 'get'
+  });
+}
+// 设置日期
+export const setBirth = ({ user_id, birth }) => {
+  return axios.request({
+    url: `/info/setBirth?user_id=${user_id}&birth=${birth}`,
+    method: 'get'
+  });
+}

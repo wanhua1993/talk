@@ -177,7 +177,7 @@ export default {
 }
 .mes_header p .first {
   position: absolute;
-  top: 8px;
+  top: 0;
   left: 14px;
 }
 .mes_header p .first img {
@@ -185,6 +185,7 @@ export default {
   overflow: hidden;
   width: 32px;
   height: 32px;
+  vertical-align: middle;
 }
 .photos_list {
   width: 96%;

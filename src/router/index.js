@@ -20,6 +20,8 @@ const ApplyList = asyncComponent('friend/applyList');
 const UserInfo = asyncComponent('userInfo');
 const Avatar = asyncComponent('userInfo/avatar');
 const UserSign = asyncComponent('userInfo/userSign');
+const Job = asyncComponent('userInfo/job');
+const Info = asyncComponent('userInfo/info');
 
 Vue.use(Router)
 
@@ -104,6 +106,16 @@ export default new Router({
       path: '/usersign',
       name: 'UserSign',
       component: UserSign
+    },
+    {
+      path: '/job',
+      name: 'Job',
+      component: Job
+    },
+    {
+      path: '/info',
+      name: 'Info',
+      component: Info
     }
   ]
 })

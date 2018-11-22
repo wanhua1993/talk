@@ -296,7 +296,7 @@ export default {
           that.currentMonth,
           that.currentDay - 1
         ],
-        title: "日期选择"
+        title: ""
       }));
       picker.on("picker.select", function(selectedVal, selectedIndex) {
         that.$emit("set-Calendar", selectedVal);
@@ -311,7 +311,7 @@ export default {
         }
         if (index == 2) {
           that.currentDay = that.data3[selectedIndex].text;
-          that.$emit("set-Calendar", that.data3[selectedIndex].dataTips);
+          // that.$emit("set-Calendar", that.data3[selectedIndex].dataTips);
         }
         monthDays = new Array(
           31,
@@ -473,10 +473,11 @@ span {
 .show-calendars {
   position: fixed;
   bottom: 0;
-  z-index: 999;
-  background: #fff;
+  z-index: 9999;
+  background: rgb(247, 146, 216);
   padding-top: 10px;
   height: 295px;
   width: 100%;
+  color: #fff;
 }
 </style>

@@ -3,17 +3,17 @@
         <Warn/>
         <div class="mes_header">
             <p>
-                个性签名
+                个人说明
                 <span class="first" @click='back()'>
                     <img src="../../assets/fanhui.png" alt="" width="32px" height="32px">
                 </span>
                 <span class="second" @click='save()'>
-                    保存
+                    完成
                 </span>
             </p>  
         </div>
-        <div class="avatar_con" v-bind:style="{backgroundImage:'url(' + back_url + ')'}">
-            <textarea name="" id="" cols="25" rows="6" placeholder="请设置你的个性签名" v-model="sign_con"></textarea>
+        <div class="avatar_con">
+            <textarea name="" id="" cols="25" rows="10" placeholder="请设置你的个性签名" v-model="info"></textarea>
         </div>
     </div>
 </template>
@@ -21,33 +21,30 @@
 import { mapGetters } from "vuex";
 import baseUrl from "@/config/index";
 import Warn from "@/components/warn";
-import { uploadAvatar, saveSign } from "@/api/user";
+import { setInfo } from "@/api/user";
 export default {
   components: {
     Warn
   },
   data() {
     return {
-      back_url: require("@/assets/sign.jpg"),
       avatar: "",
       url: baseUrl.baseUrl.dev,
-      sign_con: ""
+      info: ""
     };
   },
   computed: {
     ...mapGetters(["userInfo"])
   },
-  mounted() {
-    this.avatar = this.url + this.userInfo.avatar;
-  },
+  mounted() {},
   methods: {
     back() {
       this.$router.back();
     },
     save() {
-      saveSign({
+      setInfo({
         user_id: this.userInfo._id,
-        sign_con: this.sign_con
+        info: this.info
       })
         .then(res => {
           let value = {
@@ -58,7 +55,6 @@ export default {
           };
           this.$store.commit("SET_LOGIN", value);
           this.$store.dispatch("setShowWarn", "保存成功！");
-          this.sign_con = "";
         })
         .catch(err => {
           console.log(err);
@@ -110,20 +106,22 @@ export default {
   vertical-align: middle;
 }
 .avatar_con {
-  position: relative;
+  position: absolute;
   width: 100%;
-  height: 2rem;
+  height: 100%;
   margin: 0 auto;
   margin-top: 60px;
-  background-size: 100% 100%;
+  background: rgb(243, 241, 241);
 }
 .avatar_con textarea {
-  margin-top: 20px;
+  margin: 20px 0;
+  padding: 5px;
+  width: calc(100% - 10px);
   outline: none;
   border: none;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 10px;
-  background: #fabfa4;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+  background: #fff;
 }
 </style>

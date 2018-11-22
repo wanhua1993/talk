@@ -48,17 +48,22 @@
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='job'>职业</router-link>
+                        <router-link to='job'>
+                          职业
+                          <span class="sign_span">{{userInfo.job}}</span>
+                        </router-link>
                     </p>
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='company'>公司</router-link>
+                        公司
+                        <input type="text" name="company" v-model='company' class="sign_input" @blur='onBlurCompany()'>
                     </p>
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='school'>学校</router-link>
+                        学校
+                        <input type="text" name="school" v-model='school' class="sign_input" @blur='onBlurSchool()'>
                     </p>
                 </li>
                 <li class="info_li">
@@ -68,7 +73,10 @@
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='info'>个人说明</router-link>
+                        <router-link to='info'>
+                          个人说明
+                          <span class="sign_span">{{userInfo.info}}</span>
+                        </router-link>
                     </p>
                 </li>
             </ul>
@@ -97,7 +105,13 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import { setUsername, setSex, setBirth } from "@/api/user";
+import {
+  setUsername,
+  setSex,
+  setBirth,
+  setCompany,
+  setSchool
+} from "@/api/user";
 import Calendar from "vue-calendar-component";
 import vueCalendar from "@/components/calendar";
 export default {
@@ -124,7 +138,6 @@ export default {
       showBir: false,
       birth: "",
       agoDayHide: "",
-
       today: 0,
       originSetDateValue: "", //设置初始日期
       startYear: 1970, //起始年份
@@ -171,7 +184,10 @@ export default {
             task: ["100", "200"]
           }
         ]
-      }
+      },
+      company: "",
+      school: "",
+      info: ""
     };
   },
   computed: {
@@ -181,11 +197,9 @@ export default {
     this.username = this.userInfo.username;
     this.sex = this.userInfo.sex;
     this.originSetDateValue = this.birth = this.userInfo.birth;
-    if (this.sex == "男") {
-      this.select(1);
-    } else {
-      this.select(0);
-    }
+    this.company = this.userInfo.company;
+    this.school = this.userInfo.school;
+    this.info = this.userInfo.info;
   },
   methods: {
     back() {
@@ -206,8 +220,17 @@ export default {
     },
     showSex() {
       this.show = !this.show;
+      if (this.sex == "男") {
+        this.select(0);
+      } else {
+        this.select(1);
+      }
     },
     showBirth() {
+      let picker = document.getElementsByClassName("picker");
+      if (picker.length == 1) {
+        document.body.removeChild(picker[0]);
+      }
       this.showBir = !this.showBir;
     },
     // 设置 性别
@@ -256,6 +279,32 @@ export default {
       })
         .then(res => {
           console.log(res);
+          this.setLogin(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 设置公司
+    onBlurCompany() {
+      setCompany({
+        user_id: this.userInfo._id,
+        company: this.company
+      })
+        .then(res => {
+          this.setLogin(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 设置学校
+    onBlurSchool() {
+      setSchool({
+        user_id: this.userInfo._id,
+        school: this.school
+      })
+        .then(res => {
           this.setLogin(res.data);
         })
         .catch(err => {
@@ -387,7 +436,7 @@ export default {
   line-height: 0.4rem;
   border-bottom: 1px solid #ddd;
   text-align: right;
-  color: #f84be1;
+  color: #f37fe4;
   font-size: 0.14rem;
 }
 .slide-top-enter-active {

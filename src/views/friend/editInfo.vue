@@ -68,7 +68,8 @@
                 </li>
                 <li class="info_li">
                     <p>
-                        <router-link to='address'>所在地</router-link>
+                        所在地
+                        <input type="text" name="address" v-model='address' class="sign_input" @blur='onBlurAddress()'>
                     </p>
                 </li>
                 <li class="info_li">
@@ -110,7 +111,8 @@ import {
   setSex,
   setBirth,
   setCompany,
-  setSchool
+  setSchool,
+  setAddress
 } from "@/api/user";
 import Calendar from "vue-calendar-component";
 import vueCalendar from "@/components/calendar";
@@ -187,7 +189,8 @@ export default {
       },
       company: "",
       school: "",
-      info: ""
+      info: "",
+      address: ""
     };
   },
   computed: {
@@ -200,6 +203,7 @@ export default {
     this.company = this.userInfo.company;
     this.school = this.userInfo.school;
     this.info = this.userInfo.info;
+    this.address = this.userInfo.address;
   },
   methods: {
     back() {
@@ -303,6 +307,19 @@ export default {
       setSchool({
         user_id: this.userInfo._id,
         school: this.school
+      })
+        .then(res => {
+          this.setLogin(res.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 设置所在地
+    onBlurAddress() {
+      setAddress({
+        user_id: this.userInfo._id,
+        address: this.address
       })
         .then(res => {
           this.setLogin(res.data);

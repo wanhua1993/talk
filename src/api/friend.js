@@ -77,3 +77,11 @@ export const zhifubao = () => {
     method: 'post'
   });
 }
+// 发表
+export const publish = ({ formdata }) => {
+  return axios.request({
+    url: '/friend/publish',
+    data: formdata,
+    method: 'post'
+  });
+}

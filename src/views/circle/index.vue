@@ -116,7 +116,6 @@ export default {
   margin-top: 60px;
   width: 100%;
   height: 200px;
-  /* background-size: 100% 100%; */
 }
 .mes_header {
   position: fixed;
@@ -145,7 +144,6 @@ export default {
   left: 14px;
 }
 .circle_list {
-  /* width: 90%; */
   margin: 0 auto;
   padding: 0;
   margin-top: 20px;
@@ -153,12 +151,10 @@ export default {
 .circle_list li {
   position: relative;
   width: calc(100%-40px);
-  /* height: 200px; */
   border-bottom: 1px solid rgb(221, 217, 220);
   border-radius: 10px;
   margin-bottom: 10px;
   padding: 0 20px 20px 50px;
-  /* box-shadow: 0 0.8px 0 0.3px #fcbcf3; */
 }
 .circle_list li p {
   text-align: left;

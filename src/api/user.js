@@ -94,3 +94,10 @@ export const setInfo = ({ user_id, info }) => {
     method: 'get'
   })
 }
+// 设置所在地
+export const setAddress = ({ user_id, address }) => {
+  return axios.request({
+    url: `/info/setAddress?user_id=${user_id}&address=${address}`,
+    method: 'get'
+  })
+}

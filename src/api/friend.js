@@ -85,3 +85,10 @@ export const publish = ({ formdata }) => {
     method: 'post'
   });
 }
+// 加载朋友圈说说
+export const load_friCon = ({ user_id }) => {
+  return axios.request({
+    url: `/friend/load_friCon?user_id=${user_id}`,
+    method: 'get'
+  });
+}

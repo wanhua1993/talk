@@ -62,14 +62,17 @@ export default {
         this.$store.dispatch("setShowWarn", "请输入发表内容!");
         return;
       }
-      this.formdata.append('content', this.content);
-      this.formdata.append('user_id', this.userInfo._id);
+      this.formdata.append("content", this.content);
+      this.formdata.append("user_id", this.userInfo._id);
       publish({
         formdata: this.formdata
       })
         .then(res => {
           console.log(res);
-          // this.$router.push("/circle");
+          this.$store.dispatch("setShowWarn", "发表成功！");
+          setTimeout(() => {
+            this.$router.push("/circle");
+          }, 1000);
         })
         .catch(err => {
           console.log(err);

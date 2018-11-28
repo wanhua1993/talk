@@ -86,9 +86,9 @@ export const publish = ({ formdata }) => {
   });
 }
 // 加载朋友圈说说
-export const load_friCon = ({ user_id }) => {
+export const load_friCon = ({ user_id, index }) => {
   return axios.request({
-    url: `/friend/load_friCon?user_id=${user_id}`,
+    url: `/friend/load_friCon?user_id=${user_id}&&index=${index}`,
     method: 'get'
   });
 }

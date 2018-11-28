@@ -10,8 +10,8 @@
         </span>
       </p>
     </div>
-    <p class="drop-down" v-if="dropDown">松手刷新数据...</p>
-    <div class="bscroll" ref="bscroll">
+    <!-- <p class="drop-down" v-if="dropDown">松手刷新数据...</p> -->
+    <!-- <div class="bscroll" ref="bscroll">
       <div class="bscroll-container">
         <div class="circle_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}"></div>
         <ul class="circle_list">
@@ -28,8 +28,31 @@
           </li>
         </ul>
       </div>
-    </div>
-    <p class="x" v-show="up">加载更多...</p>
+    </div>-->
+    <!-- <p class="x" v-show="up">加载更多...</p> -->
+    <div class="aa"></div>
+    <Scroll
+      class="wrapper"
+      :data="mesList"
+      :pulldown="pulldown"
+      @pulldown="load_con"
+      @pullup="pullup"
+    >
+      <div class="circle_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}"></div>
+      <ul class="circle_list">
+        <li v-for="(item, index) in mesList" :key="index">
+          <span class="circle_avatar">
+            <img :src="url + item.user_id.avatar" alt="头像">
+          </span>
+          <p style="color: #f84be1">{{item.user_id.username}}</p>
+          <p>{{item.content}}</p>
+          <p v-if="item.photos.length" class="imgUrl">
+            <img v-for="(val, index) in item.photos" :key="index" :src="url + val" alt="图片">
+          </p>
+          <p style="margin: 0; color: #999">{{item.createdAt}}</p>
+        </li>
+      </ul>
+    </Scroll>
     <Footer></Footer>
   </div>
 </template>
@@ -40,6 +63,7 @@ import BScroll from "better-scroll";
 import { load_friCon } from "@/api/friend";
 import baseUrl from "@/config/index";
 import { parseChatTime } from "@/lib/parseTime";
+import Scroll from "@/components/scroll";
 export default {
   data() {
     return {
@@ -47,32 +71,42 @@ export default {
       mesList: [],
       url: baseUrl.baseUrl.dev,
       dropDown: false,
-      up: false
+      up: false,
+      pulldown: false,
+      index: 1,
+      flag: true // 是否有数据
     };
   },
   components: {
-    Footer
+    Footer,
+    Scroll
   },
   computed: {
     ...mapGetters(["userInfo"])
   },
   mounted() {
     this.load_con();
-    this.initData();
+    // this.initData();
   },
   methods: {
     // 加载说说了
     load_con() {
       load_friCon({
-        user_id: this.userInfo._id
+        user_id: this.userInfo._id,
+        index: this.index
       })
         .then(res => {
-          for (let i = 0; i < res.data.length; i++) {
-            res.data[i].createdAt = parseChatTime(
-              Date.parse(res.data[i].createdAt) / 1000
-            );
+          if (res.data.length) {
+            this.flag = true;
+            for (let i = 0; i < res.data.length; i++) {
+              res.data[i].createdAt = parseChatTime(
+                Date.parse(res.data[i].createdAt) / 1000
+              );
+            }
+            this.mesList = this.mesList.concat(res.data);
+          } else {
+            this.flag = false;
           }
-          this.mesList = res.data;
         })
         .catch(err => {
           console.log(err);
@@ -100,11 +134,11 @@ export default {
           } else {
             this.dropDown = false;
           }
-          if(pos.y < -500) {
-            this.up = true;
-          } else {
-            this.up = false;
-          }
+          // if (pos.y < -500) {
+          //   this.up = true;
+          // } else {
+          //   this.up = false;
+          // }
           console.log(this.scroll.maxScrollY);
         });
         //touchEnd（手指离开以后触发） 通过这个方法来监听下拉刷新
@@ -116,17 +150,27 @@ export default {
 
           //上拉加载 总高度>下拉的高度+10 触发加载更多
           if (this.scroll.maxScrollY > pos.y + 10) {
-            this.up = false;
             //使用refresh 方法 来更新scroll  解决无法滚动的问题
             this.scroll.refresh();
           }
         });
       });
+    },
+    //
+    pullup() {
+      if (this.flag) {
+        this.index++;
+        this.load_con();
+      }
     }
   }
 };
 </script>
 <style scoped>
+.aa {
+  height: 60px;
+  width: 100%;
+}
 .bscroll {
   width: 100%;
   height: 600px;

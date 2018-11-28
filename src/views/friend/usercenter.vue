@@ -22,7 +22,7 @@
                 </p>
             </div>
         </div>
-        <div class="user_photo" ref="tab">
+        <div class="user_photo" ref="tab" v-show="menuList.length">
             <ul ref="tabsWrapper">
                 <li v-for="(item, index) in menuList" :key="index">
                     <img :src="item.url" alt="">
@@ -196,8 +196,8 @@ export default {
   width: 100%;
   height: 60px;
   background: linear-gradient(to right, #c00dec, #f84be1);
-  border: 1px solid transparent;
-  box-sizing: border-box;
+  /* border: 1px solid transparent; */
+  /* box-sizing: border-box; */
   z-index: 1;
 }
 .mes_header p {
@@ -218,35 +218,6 @@ export default {
   position: absolute;
   top: 8px;
   left: 14px;
-}
-.w_search {
-  width: 100%;
-  height: 40px;
-  margin-top: 65px;
-}
-.w_search p {
-  position: relative;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  line-height: 40px;
-}
-.w_search p input {
-  width: 80%;
-  height: 30px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-  text-align: center;
-  font-size: 14px;
-  color: rgb(136, 133, 133);
-}
-.w_search p img {
-  position: absolute;
-  top: 33%;
-  left: 30%;
-  width: 16px;
-  height: 16px;
 }
 .user_back {
   margin-top: 60px;

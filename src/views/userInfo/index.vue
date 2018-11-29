@@ -1,51 +1,57 @@
 <template>
-    <div class="photos_con">
-        <div class="mes_header">
-            <p>
-                照片墙({{nums}})
-                <span class="first" @click='back()'>
-                    <img src="../../assets/fanhui.png" alt="" width="32px" height="32px">
-                </span>
-                <span class="second" @click='edit_img()' v-show='!show_circle'>
-                    管理
-                </span>
-                <span class="second" @click='cancle_img()' v-show='show_circle'>
-                    取消
-                </span>
-            </p>  
-        </div>
-        <ul class="photos_list" v-if='photos.length'>
-            <li class="list_li" v-for="(item, index) in photos" :key="index">
-                <p>
-                    <img :src="item.url" alt="照片">
-                </p>
-                <!-- <span :class='item.status == true ? show : ""' class="circle" v-show="show_circle" @click='select_cir(index, item._id)'></span> -->
-                <input type="checkbox" class="circle" 
-                v-model="selectCir" 
-                :id="item._id" 
-                :value="item._id" 
-                :class='item.status == true ? show : ""' 
-                v-show="show_circle">
-            </li>
-            <div class="clear"></div>
-        </ul>
-        <div class="photos_list" v-if="photos.length == 0">
-          您还没有上传图片
-        </div> 
-        <div class="upload_photo" v-show='!show_circle'>
-            上传到图片墙中
-            <input type="file" name="photo" @change="upload_img()" class="imgFile" accept='image/*'>
-        </div>
-        <div class="upload_photo" v-show='show_circle' @click='delete_photo()'>
-            删除
-        </div>
+  <div class="photos_con">
+    <div class="mes_header">
+      <p>
+        照片墙({{nums}})
+        <span class="first" @click="back()">
+          <img src="../../assets/fanhui.png" alt width="32px" height="32px">
+        </span>
+        <span class="second" @click="edit_img()" v-show="!show_circle">管理</span>
+        <span class="second" @click="cancle_img()" v-show="show_circle">取消</span>
+      </p>
     </div>
+    <ul class="photos_list" v-if="photos.length">
+      <li class="list_li" v-for="(item, index) in photos" :key="index">
+        <p>
+          <img :src="item.url" alt="照片" @click="open_img(item.url)">
+        </p>
+        <!-- <span :class='item.status == true ? show : ""' class="circle" v-show="show_circle" @click='select_cir(index, item._id)'></span> -->
+        <input
+        type="checkbox"
+        class="circle"
+        v-model="selectCir"
+        :id="item._id"
+        :value="item._id"
+        :class="item.status == true ? show : ''"
+        v-show="show_circle"
+        >
+      </li>
+      <div class="clear"></div>
+    </ul>
+    <div class="photos_list" v-if="photos.length == 0">您还没有上传图片</div>
+    <div class="upload_photo" v-show="!show_circle">
+      上传到图片墙中
+      <input
+        type="file"
+        name="photo"
+        @change="upload_img()"
+        class="imgFile"
+        accept="image/*"
+      >
+    </div>
+    <div class="upload_photo" v-show="show_circle" @click="delete_photo()">删除</div>
+    <open :img="img" :show="showImg" @close="close"></open>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import baseUrl from "@/config/index";
 import { uploadPhotos, photosList, deleteImg } from "@/api/user";
+import Open from "@/components/openImg";
 export default {
+  components: {
+    Open
+  },
   data() {
     return {
       avatar: "",
@@ -55,7 +61,9 @@ export default {
       show_circle: false,
       show: "w_show",
       w_height: "",
-      selectCir: []
+      selectCir: [],
+      img: "",
+      showImg: false
     };
   },
   computed: {
@@ -141,6 +149,15 @@ export default {
     cancle_img() {
       this.selectCir = [];
       this.show_circle = !this.show_circle;
+    },
+    // 查看图片
+    open_img(val) {
+      this.img = val;
+      this.showImg = true;
+    },
+    close() {
+      this.img = "";
+      this.showImg = false;
     }
   }
 };

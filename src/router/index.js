@@ -24,6 +24,10 @@ const Job = asyncComponent('userInfo/job');
 const Info = asyncComponent('userInfo/info');
 
 Vue.use(Router)
+Router.prototype.goBack = function () {
+  this.isBack = true
+  window.history.go(-1);
+}
 
 export default new Router({
   routes: [
@@ -36,6 +40,11 @@ export default new Router({
       path: '/friend',
       name: 'friend',
       component: Friend,
+    },
+    {
+      path: '/',
+      name: 'Login',
+      component: Login
     },
     {
       path: '/login',

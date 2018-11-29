@@ -1,49 +1,46 @@
 <template>
-    <div class="add_box">
-      <Warn></Warn>
-        <div class="mes_header">
-            <p>
-                {{title}}
-                <span class="first" @click='back()'>
-                    <img src="../../assets/fanhui.png" alt="" width="30px" height="30px">
-                </span>
-            </p>
-        </div>
-        <div class="user_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}">
-            <div class="user_avatar">
-                <img :src="user.avatar" alt="">
-            </div>
-            <div class="user_info">
-                <p>
-                    {{user.username}}
-                </p>
-                <p>
-                    聆语号：{{user.iden_num}}
-                </p>
-            </div>
-        </div>
-        <div class="user_photo" ref="tab" v-show="menuList.length">
-            <ul ref="tabsWrapper">
-                <li v-for="(item, index) in menuList" :key="index">
-                    <img :src="item.url" alt="">
-                </li>
-            </ul>
-        </div>
-        <div class="infos">
-            <p class="user_title">座右铭</p>
-            <p class="user_val">{{user.signature}}</p>
-            <p class="user_title">她的等级</p>
-            <p class="user_val">111111111</p>
-            <p class="user_title">所在地</p>
-            <p class="user_val">{{user.address}}</p>
-        </div>
-        <div class="user_btn">
-            <p class="btn" v-if="my_id" @click="editInfo()">编辑信息</p>
-            <p class="btn" v-if="my_id" @click='login_out()'>退出登录</p>
-            <p class="btn" v-else-if="user_id" @click='add_user()'>加为好友</p>
-            <p class="btn" v-else @click="toroom">发送消息</p>
-        </div>
+  <div class="add_box">
+    <Warn></Warn>
+    <div class="mes_header">
+      <p>
+        {{title}}
+        <span class="first" @click="back()">
+          <img src="../../assets/fanhui.png" alt width="30px" height="30px">
+        </span>
+      </p>
     </div>
+    <div class="user_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}">
+      <div class="user_avatar">
+        <img :src="user.avatar" alt @click="open_img(user.avatar)">
+      </div>
+      <div class="user_info">
+        <p>{{user.username}}</p>
+        <p>聆语号：{{user.iden_num}}</p>
+      </div>
+    </div>
+    <div class="user_photo" ref="tab" v-show="menuList.length">
+      <ul ref="tabsWrapper">
+        <li v-for="(item, index) in menuList" :key="index" @click="open_img(item.url)">
+          <img :src="item.url" alt>
+        </li>
+      </ul>
+    </div>
+    <div class="infos">
+      <p class="user_title">座右铭</p>
+      <p class="user_val">{{user.signature}}</p>
+      <p class="user_title">她的等级</p>
+      <p class="user_val">111111111</p>
+      <p class="user_title">所在地</p>
+      <p class="user_val">{{user.address}}</p>
+    </div>
+    <div class="user_btn">
+      <p class="btn" v-if="my_id" @click="editInfo()">编辑信息</p>
+      <p class="btn" v-if="my_id" @click="login_out()">退出登录</p>
+      <p class="btn" v-else-if="user_id" @click="add_user()">加为好友</p>
+      <p class="btn" v-else @click="toroom">发送消息</p>
+    </div>
+    <open :img="img" :show="show" @close="close"></open>
+  </div>
 </template>
 <script>
 import Warn from "@/components/warn";
@@ -52,9 +49,11 @@ import { find_one_user, addUser } from "@/api/friend";
 import baseUrl from "@/config/index";
 import { mapGetters } from "vuex";
 import { uploadPhotos, photosList, deleteImg } from "@/api/user";
+import Open from "@/components/openImg";
 export default {
   components: {
-    Warn
+    Warn,
+    Open
   },
   data() {
     return {
@@ -67,7 +66,9 @@ export default {
       my_id: "",
       title: "她的资料",
       user: {},
-      url: baseUrl.baseUrl.dev
+      url: baseUrl.baseUrl.dev,
+      img: "",
+      show: false
     };
   },
   computed: {
@@ -95,7 +96,7 @@ export default {
   },
   methods: {
     back() {
-      this.$router.back();
+      this.$router.goBack();
     },
     // 加载图片库
     load_img() {
@@ -121,7 +122,7 @@ export default {
       if (!this.scroll) {
         this.scroll = new BScroll(this.$refs.tab, {
           start: 0,
-          click: true,
+          click: false,
           scrollY: false,
           scrollX: true,
           eventPassthrough: "vertical" // 忽略这个实例对象的垂直滑动事件
@@ -178,6 +179,15 @@ export default {
         .catch(err => {
           console.log(err);
         });
+    },
+    // 查看图片
+    open_img(val) {
+      this.img = val;
+      this.show = true;
+    },
+    close() {
+      this.img = "";
+      this.show = false;
     }
   }
 };

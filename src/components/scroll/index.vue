@@ -164,8 +164,7 @@ export default {
         probeType: this.probeType,
         click: this.click,
         scrollX: this.scrollX,
-        bounceTime: 100
-        // momentum: false
+        momentum: false
       });
 
       // 是否派发滚动事件
@@ -235,7 +234,7 @@ export default {
     },
     enable() {
       // 代理better-scroll的enable方法
-      this.scroll && this.scroll.enable(); 
+      this.scroll && this.scroll.enable();  
     },
     refresh() {
       // 代理better-scroll的refresh方法

@@ -41,19 +41,21 @@
       <div class="circle_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}"></div>
       <ul class="circle_list">
         <li v-for="(item, index) in mesList" :key="index">
-          <span class="circle_avatar">
+          <span class="circle_avatar" >
             <img :src="url + item.user_id.avatar" alt="头像">
           </span>
           <p style="color: #f84be1">{{item.user_id.username}}</p>
           <p>{{item.content}}</p>
-          <p v-if="item.photos.length" class="imgUrl">
-            <img v-for="(val, index) in item.photos" :key="index" :src="url + val" alt="图片">
+          <p v-if="item.photos.length" class="imgUrl" >
+            <img v-for="(val, index) in item.photos" :key="index" :src="url + val" alt="图片" @click="open_img(val)">
           </p>
           <p style="margin: 0; color: #999">{{item.createdAt}}</p>
         </li>
       </ul>
     </Scroll>
+    
     <Footer></Footer>
+    <open :img='img' :show='show' @close='close'></open>
   </div>
 </template>
 <script>
@@ -64,6 +66,7 @@ import { load_friCon } from "@/api/friend";
 import baseUrl from "@/config/index";
 import { parseChatTime } from "@/lib/parseTime";
 import Scroll from "@/components/scroll";
+import Open from '@/components/openImg';
 export default {
   data() {
     return {
@@ -74,12 +77,15 @@ export default {
       up: false,
       pulldown: false,
       index: 1,
-      flag: true // 是否有数据
+      flag: true, // 是否有数据
+      img: '',
+      show: false
     };
   },
   components: {
     Footer,
-    Scroll
+    Scroll,
+    Open
   },
   computed: {
     ...mapGetters(["userInfo"])
@@ -162,6 +168,15 @@ export default {
         this.index++;
         this.load_con();
       }
+    },
+    // 查看图片
+    open_img(val) {
+      this.img = this.url + val;
+      this.show = true;
+    },
+    close() {
+      this.img = '';
+      this.show = false;
     }
   }
 };
@@ -200,6 +215,7 @@ export default {
   color: rgb(161, 161, 161);
 }
 .cirlce_box {
+  position: relative;
   width: 100%;
   min-height: 100%;
   box-sizing: border-box;

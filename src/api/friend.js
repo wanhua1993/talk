@@ -88,7 +88,14 @@ export const publish = ({ formdata }) => {
 // 加载朋友圈说说
 export const load_friCon = ({ user_id, index }) => {
   return axios.request({
-    url: `/friend/load_friCon?user_id=${user_id}&&index=${index}`,
+    url: `/friend/load_friCon?user_id=${user_id}&index=${index}`,
+    method: 'get'
+  });
+}
+// 加载聊天记录
+export const loadMess = ({ user_id, other_id }) => {
+  return axios.request({
+    url: `/friend/loadMess?user_id=${user_id}&other_id=${other_id}`,
     method: 'get'
   });
 }

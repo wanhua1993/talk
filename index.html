@@ -70,7 +70,6 @@
 <!-- <script src="http://192.168.0.87:3001/socket.io/socket.io.js"></script>
 <script type="text/javascript">
   const socket = io.connect('http://192.168.0.87:3001');
-  console.log(socket);
   //解决用户手动刷新浏览器后，原来的socketid失效的问题
   const loginStatus = JSON.parse(localStorage.getItem("loginStatus") || '{}');
   const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');

@@ -68,7 +68,8 @@ export default {
       user: {},
       url: baseUrl.baseUrl.dev,
       img: "",
-      show: false
+      show: false,
+      has_id: ''
     };
   },
   computed: {
@@ -89,6 +90,7 @@ export default {
       this.find_friend(this.user_id);
     }
     if (has_id) {
+      this.has_id = has_id;
       // has_id 存在 说明 是已经加过好友 可以直接聊天
       this.find_friend(has_id);
     }
@@ -132,7 +134,7 @@ export default {
       }
     },
     toroom() {
-      this.$router.push("/chatroom");
+      this.$router.push("/chatroom?to_id=" + this.has_id);
     },
     // 编辑信息
     editInfo() {
@@ -174,7 +176,6 @@ export default {
             // 2 实时告诉对方
             this.$socket.emit("addFriend", this.user._id);
           }
-          console.log(res);
         })
         .catch(err => {
           console.log(err);

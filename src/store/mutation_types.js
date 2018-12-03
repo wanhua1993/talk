@@ -15,3 +15,5 @@ export const SHOW_WARN = 'SHOW_WARN'; // 弹出框状态
 export const APPLY_FRIENDS_NUM = 'APPLY_FRIENDS_NUM'; // 好友申请数量
 
 export const REMOVE_APPLY = 'REMOVE_APPLY'; // 清空所有好友申请消息提醒
+
+export const NEW_MESSAGE = 'NEW_MESSAGE'; // 新消息

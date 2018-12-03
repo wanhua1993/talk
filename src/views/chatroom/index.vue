@@ -80,7 +80,8 @@ export default {
         return true;
       }
     },
-    ...mapGetters(["userInfo"])
+    ...mapGetters(["userInfo"]),
+    ...mapGetters(['newMessage'])
   },
   created() {
     let id = this.$route.query.to_id;
@@ -89,7 +90,9 @@ export default {
     }
     // 加载聊天记录
     this.load_message();
+
   },
+  mounted() {},
   methods: {
     load_message() {
       loadMess({
@@ -121,10 +124,22 @@ export default {
         };
         this.chat_list.push(value);
         this.content = "";
-        this.$socket.emit('send_message', value);
+        this.$socket.emit("send_message", value);
       } else {
         alert("输入内容不能为空！");
       }
+    }
+  },
+  watch: {
+    newMessage(new_data) {
+      let value = {
+        avatar: new_data.avatar,
+        content: new_data.content,
+        location: new_data.location,
+        username: new_data.from_id.username,
+        type: new_data.type
+      }
+      this.chat_list.push(value);
     }
   }
 };

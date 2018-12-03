@@ -7,3 +7,5 @@ export const applyNums = state => state.apply_nums;
 export const allMessage = state => {
     return state.message.allMessage;
 };
+
+export const newMessage = state => state.new_message;

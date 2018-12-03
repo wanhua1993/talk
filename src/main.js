@@ -19,9 +19,9 @@ Vue.use(new VueSocketio({
   debug: true,
   connection: baseUrl.baseUrl.dev,
   vuex: {
-      store,
-      actionPrefix: 'SOCKET_',
-      mutationPrefix: 'SOCKET_'
+    store,
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_'
   }
 }))
 
@@ -36,8 +36,8 @@ socket.on('receiveFriendApply', (data) => {
 });
 // 接受 私聊信息
 socket.on("receiveSingleMessage", (data) => {
-// 接收 到消息以后 更新到消息 list中
-    console.log(data);
+  // 接收 到消息以后 更新到消息 list中
+  store.commit('NEW_MESSAGE', data);
 });
 
 /* eslint-disable no-new */

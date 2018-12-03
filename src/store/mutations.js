@@ -3,7 +3,8 @@ import * as types from './mutation_types';
 export const state = {
   'loginStatus': JSON.parse(localStorage.getItem('loginStatus')) || {},
   'userInfo': JSON.parse(localStorage.getItem('userInfo')) || {},
-  'apply_nums': 0
+  'apply_nums': 0,
+  'new_message': {}
 }
 
 export const mutations = {
@@ -30,6 +31,10 @@ export const mutations = {
   // 好友申请消息提示 清零
   [types.REMOVE_APPLY](state) {
     state.apply_nums = 0;
+  },
+  // 监听新的消息
+  [types.NEW_MESSAGE](state, data) {
+    state.new_message = data;
   }
 }
 function clear(state) {

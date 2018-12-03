@@ -10,7 +10,7 @@
             </div>
             <div class="mes_content">
               <ul>
-                <li v-for="(item, index) in mess_list" :key='index' @click="toDetail()">
+                <li v-for="(item, index) in mess_list" :key='index' @click="toDetail(item.w_id)">
                     <span class="mess_avatar">
                         <img :src="url + item.avatar" alt="头像">
                     </span>
@@ -106,9 +106,11 @@ export default {
             if (this.userId == item.from_id) {
               value[index]["avatar"] = item.to_user.avatar;
               value[index]["username"] = item.to_user.username;
+              value[index]['w_id'] = item.to_user._id;
             } else {
               value[index]["avatar"] = item.from_user.avatar;
               value[index]["username"] = item.from_user.username;
+              value[index]['w_id'] = item.from_user._id;
             }
           });
           this.mess_list = value;
@@ -117,8 +119,8 @@ export default {
           console.log(err);
         });
     },
-    toDetail() {
-      this.$router.push("/chatroom");
+    toDetail(id) {
+      this.$router.push("/chatroom?to_id=" + id);
     },
     show_mark(flag) {
       this.show = flag;

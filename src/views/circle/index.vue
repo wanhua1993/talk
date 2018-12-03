@@ -223,7 +223,6 @@ export default {
   overflow: hidden;
 }
 .circle_back {
-  margin-top: 60px;
   width: 100%;
   height: 200px;
 }

@@ -22,6 +22,7 @@ const Avatar = asyncComponent('userInfo/avatar');
 const UserSign = asyncComponent('userInfo/userSign');
 const Job = asyncComponent('userInfo/job');
 const Info = asyncComponent('userInfo/info');
+const Qrcode = asyncComponent('friend/qrcode');
 
 Vue.use(Router)
 Router.prototype.goBack = function () {
@@ -125,6 +126,11 @@ export default new Router({
       path: '/info',
       name: 'Info',
       component: Info
+    },
+    {
+      path: '/qrcode',
+      name: 'Qrcode',
+      component: Qrcode
     }
   ]
 })

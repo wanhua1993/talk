@@ -16,6 +16,7 @@
     "vue": "^2.5.2",
     "vue-calendar-component": "^2.7.4",
     "vue-calendar-plugin": "^1.1.2",
+    "vue-qart": "^2.2.0",
     "vue-router": "^3.0.1",
     "vue-socket.io": "^3.0.4",
     "vue2-animate": "^2.1.0",

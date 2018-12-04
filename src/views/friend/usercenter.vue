@@ -7,6 +7,9 @@
         <span class="first" @click="back()">
           <img src="../../assets/fanhui.png" alt width="30px" height="30px">
         </span>
+        <span class="second" @click="qrcode()">
+          <img src="../../assets/qrcodecopy.png" alt width="20px" height="20px">
+        </span>
       </p>
     </div>
     <div class="user_back" v-bind:style="{backgroundImage:'url(' + back_url + ')'}">
@@ -189,6 +192,10 @@ export default {
     close() {
       this.img = "";
       this.show = false;
+    },
+    // 跳转到 二维码页
+    qrcode() {
+      this.$router.push('/qrcode');
     }
   }
 };
@@ -222,7 +229,7 @@ export default {
 }
 .mes_header p .second {
   position: absolute;
-  top: 10px;
+  top: 4px;
   right: 14px;
 }
 .mes_header p .first {

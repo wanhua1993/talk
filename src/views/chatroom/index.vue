@@ -36,19 +36,67 @@
         </li>
       </ul>
     </div>
-
-    <div class="chat_footer">
-      <span class="yuyin">
-        <img src="../../assets/yuyin.png" alt>
-      </span>
-      <input type="text" v-model="content">
-      <span class="wenjian">
-        <img src="../../assets/tianjia.png" alt v-if="if_con">
-        <img src="../../assets/fasong.png" alt v-else @click="send_con()">
-      </span>
-      <span class="biaoqing">
-        <img src="../../assets/biaoqing.png" alt>
-      </span>
+    <div class="w_footer" :style="{bottom: bottom}" :class="[animated]">
+      <div class="chat_footer">
+        <span class="yuyin">
+          <img src="../../assets/yuyin.png" alt>
+        </span>
+        <input type="text" v-model="content" @focus="onFocus">
+        <span class="wenjian">
+          <img src="../../assets/tianjia.png" alt v-if="if_con" @click="show_biaoqing">
+          <img src="../../assets/fasong.png" alt v-else @click="send_con()">
+        </span>
+        <span class="biaoqing">
+          <img src="../../assets/biaoqing.png" alt>
+        </span>
+      </div>
+      <div class="hidden_box">
+        <ul>
+          <li>
+            <span>
+              <img src="../../assets/meinv1.jpg" alt>
+            </span>
+            <p>相册</p>
+          </li>
+          <li>
+            <span>
+              <img src="../../assets/meinv2.jpg" alt>
+            </span>
+            <p>拍摄</p>
+          </li>
+          <li>
+            <span>
+              <img src="../../assets/meinv3.jpg" alt>
+            </span>
+            <p>文件</p>
+          </li>
+          <li>
+            <span>
+              <img src="../../assets/meinv4.jpg" alt>
+            </span>
+            <p>名片</p>
+          </li>
+          <li>
+            <span>
+              <img src="../../assets/meinv1.jpg" alt>
+            </span>
+            <p>相册</p>
+          </li>
+          <li>
+            <span>
+              <img src="../../assets/meinv2.jpg" alt>
+            </span>
+            <p>拍摄</p>
+          </li>
+          <li>
+            <span>
+              <img src="../../assets/meinv3.jpg" alt>
+            </span>
+            <p>文件</p>
+          </li>
+          <div style="clear: both"></div>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -69,7 +117,10 @@ export default {
       left_span: "left_span",
       right_span: "right_span",
       content: "",
-      other_id: ""
+      other_id: "",
+      show_box: false,
+      bottom: "-2rem",
+      animated: ""
     };
   },
   computed: {
@@ -81,7 +132,7 @@ export default {
       }
     },
     ...mapGetters(["userInfo"]),
-    ...mapGetters(['newMessage'])
+    ...mapGetters(["newMessage"])
   },
   created() {
     let id = this.$route.query.to_id;
@@ -90,9 +141,17 @@ export default {
     }
     // 加载聊天记录
     this.load_message();
-
   },
   mounted() {},
+  directives: {
+    focus: {
+      inserted: function(el, { value }) {
+        if (value) {
+          el.focus();
+        }
+      }
+    }
+  },
   methods: {
     load_message() {
       loadMess({
@@ -117,7 +176,7 @@ export default {
           avatar: this.userInfo.avatar,
           content: this.content,
           location: "right",
-          username: "小天",
+          username: "小天", 
           type: "0",
           from_id: this.userInfo._id,
           to_id: this.other_id
@@ -128,6 +187,16 @@ export default {
       } else {
         alert("输入内容不能为空！");
       }
+    },
+    show_biaoqing() {
+      this.show_box = !this.show_box;
+      this.bottom = this.show_box ? "0" : "-2rem";
+      this.animated = this.show_box ? "animated_up" : "animated_down";
+    },
+    onFocus() {
+      this.show_box = false;
+      this.bottom = "-2rem";
+      this.animated = "";
     }
   },
   watch: {
@@ -138,7 +207,7 @@ export default {
         location: new_data.location,
         username: new_data.from_id.username,
         type: new_data.type
-      }
+      };
       this.chat_list.push(value);
     }
   }
@@ -157,12 +226,38 @@ export default {
   position: fixed;
   width: 100%;
   height: 60px;
-  background: linear-gradient(to right, #c00dec, #f84be1); /* 标准的语法 */
+  background: linear-gradient(to right, #c00dec, #f84be1);
+  /* 标准的语法 */
   z-index: 1;
 }
-.chat_footer {
+.w_footer {
+  width: 100%;
   position: fixed;
-  bottom: 0;
+  left: 0;
+}
+.animated_up {
+  animation: up 0.3s ease;
+}
+.animated_down {
+  animation: down 0.2s ease;
+}
+@keyframes up {
+  0% {
+    bottom: -2rem;
+  }
+  100% {
+    bottom: 0;
+  }
+}
+@keyframes down {
+  0% {
+    bottom: 0;
+  }
+  100% {
+    bottom: -2rem;
+  }
+}
+.chat_footer {
   width: 100%;
   height: 50px;
   background: #f8f6f8;
@@ -274,7 +369,6 @@ export default {
   font-size: 14px;
   border-radius: 8px;
 }
-
 .chat_one span {
   position: absolute;
   top: 8px;
@@ -305,5 +399,32 @@ export default {
 .right_span {
   right: -12px;
   border-color: transparent transparent transparent #fdc3f5;
+}
+.hidden_box {
+  width: 100%;
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hidden_box ul {
+  padding: 0;
+  margin: 0;
+}
+.hidden_box ul li {
+  float: left;
+  width: 25%;
+}
+.hidden_box ul li span {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin: 10px auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.hidden_box ul li span img {
+  width: 100%;
+  height: 100%;
 }
 </style>

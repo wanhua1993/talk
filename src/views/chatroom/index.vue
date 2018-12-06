@@ -26,9 +26,9 @@
           <p
             v-else-if="item.type=='1'"
             class="chat_img"
-            :class="[item.location=='left' ? left : right]"
+            :class="[item.location=='left' ? left : right, item.p_class]"
           >
-            <img :src="item.content" alt="图片" width="150px" height="150px">
+            <img :src="item.content" alt="图片" :class="[item.img_class]">
             <span :class="[item.location=='left' ? left_span : right_span]"></span>
           </p>
           <!-- 语音 -->
@@ -55,12 +55,28 @@
           <li>
             <span>
               <img src="../../assets/meinv1.jpg" alt>
+              <input
+                class="imgFile"
+                id="upload_file"
+                type="file"
+                name="file"
+                @change="fileChange()"
+              >
             </span>
             <p>相册</p>
           </li>
           <li>
             <span>
               <img src="../../assets/meinv2.jpg" alt>
+              <input
+                class="imgFile"
+                id="upload_file"
+                accept="image/*"
+                capture="camera"
+                type="file"
+                name="file"
+                @change="fileChange()"
+              >
             </span>
             <p>拍摄</p>
           </li>
@@ -68,7 +84,7 @@
             <span>
               <img src="../../assets/meinv3.jpg" alt>
             </span>
-            <p>文件</p>
+            <p>语音输入</p>
           </li>
           <li>
             <span>
@@ -80,19 +96,7 @@
             <span>
               <img src="../../assets/meinv1.jpg" alt>
             </span>
-            <p>相册</p>
-          </li>
-          <li>
-            <span>
-              <img src="../../assets/meinv2.jpg" alt>
-            </span>
-            <p>拍摄</p>
-          </li>
-          <li>
-            <span>
-              <img src="../../assets/meinv3.jpg" alt>
-            </span>
-            <p>文件</p>
+            <p>位置</p>
           </li>
           <div style="clear: both"></div>
         </ul>
@@ -120,7 +124,9 @@ export default {
       other_id: "",
       show_box: false,
       bottom: "-2rem",
-      animated: ""
+      animated: "",
+      chat_img_p: "",
+      chat_img_img: ""
     };
   },
   computed: {
@@ -176,7 +182,7 @@ export default {
           avatar: this.userInfo.avatar,
           content: this.content,
           location: "right",
-          username: "小天", 
+          username: "小天",
           type: "0",
           from_id: this.userInfo._id,
           to_id: this.other_id
@@ -197,6 +203,44 @@ export default {
       this.show_box = false;
       this.bottom = "-2rem";
       this.animated = "";
+    },
+    // 图片上传
+    fileChange() {
+      let that = this;
+      let file = document.getElementsByClassName("imgFile")[0];
+      window.URL = window.URL || window.webkitURL;
+      var url = window.URL.createObjectURL(file.files[0]);
+      let img = new Image();
+      img.src = url;
+      img.onload = function(e) {
+        // 判断上传的图片的 宽 和 高
+        let if_width = false;
+        if (this.width > this.height) {
+          if_width = 0;
+          that.chat_img_p = "chat_img_width";
+          that.chat_img_img = "img_height";
+        } else if (this.width < this.height) {
+          if_width = 1;
+          that.chat_img_p = "chat_img_height";
+          that.chat_img_img = "img_width";
+        } else {
+          if_width = 2;
+          that.chat_img_p = "chat_img_equl";
+          that.chat_img_img = "img_equl";
+        }
+        let value = {
+          avatar: that.userInfo.avatar,
+          content: url,
+          location: "right",
+          username: "小天",
+          type: "1",
+          from_id: that.userInfo._id,
+          to_id: that.other_id,
+          p_class: that.chat_img_p,
+          img_class: that.chat_img_img
+        };
+        that.chat_list.push(value);
+      };
     }
   },
   watch: {
@@ -391,6 +435,29 @@ export default {
 .chat_img {
   background: #fff;
   box-shadow: none;
+  overflow: hidden;
+}
+.chat_img_width {
+  width: 1.2rem;
+  height: 0.8rem;
+}
+.chat_img_height {
+  width: 0.8rem;
+  height: 1.2rem;
+}
+.chat_img_equl {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.chat_img .img_width {
+  width: 100%;
+}
+.chat_img .img_height {
+  height: 100%;
+}
+.img_equl {
+  width: 100%;
+  height: 100%;
 }
 .left_span {
   left: -12px;
@@ -415,13 +482,24 @@ export default {
   float: left;
   width: 25%;
 }
+
 .hidden_box ul li span {
+  position: relative;
   display: block;
   width: 0.5rem;
   height: 0.5rem;
   margin: 10px auto;
   border-radius: 10px;
   overflow: hidden;
+}
+.hidden_box ul li span input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
 }
 .hidden_box ul li span img {
   width: 100%;

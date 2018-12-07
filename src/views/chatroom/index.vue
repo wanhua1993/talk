@@ -473,6 +473,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: rgb(240, 240, 240);
 }
 .hidden_box ul {
   padding: 0;
